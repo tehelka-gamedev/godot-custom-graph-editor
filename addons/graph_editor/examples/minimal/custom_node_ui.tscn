@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw8x3ymqvfuvk"]
+
+[ext_resource type="Script" path="res://addons/graph_editor/examples/minimal/custom_node_ui.gd" id="1_minimal_node_ui"]
+
+[node name="MinimalCustomNodeUI" type="Control"]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_minimal_node_ui")
+
+[node name="NameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -11.5
+offset_right = 50.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Node"
+horizontal_alignment = 1
+vertical_alignment = 1
