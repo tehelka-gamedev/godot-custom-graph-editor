@@ -258,7 +258,9 @@ func get_mouse_screen_coordinates() -> Vector2:
 
 ## Returns the center of the screen in world coordinates. See also [method get_mouse_world_coordinates].
 func get_screen_center_coordinates() -> Vector2:
-    return _content.global_position + _content.size/2
+    var screen_center_pos: Vector2 = global_position + size / 2
+    var content_origin: Vector2 = _content.global_position
+    return (screen_center_pos - content_origin) / zoom
 
 
 ## Set the zoom level of the graph editor.
@@ -926,7 +928,8 @@ func _on_new_link_requested(start_node: CGEGraphNodeUI, end_node: CGEGraphNodeUI
     execute_command(cmd)
 
 
-## Called when a new node is created in the graph. Calls [method node_created] for additional behavior.
+## Called when a new node is created in the graph. Responsible for creating the UI of the created logic-node.[br]
+## Calls [method node_created] for additional behavior.
 func _on_node_created(node_id: int) -> void:
     var pos: Vector2 = get_screen_center_coordinates()
 
@@ -1018,8 +1021,6 @@ func _update_parallel_link_offsets(node_a_id: int, node_b_id: int) -> void:
 
 ## Called when the "Add Node" action is triggered from the toolbar.
 func _on_add_node_requested() -> void:
-    # var pos: Vector2 = get_screen_center_coordinates()
-    
     var cmd: CGECommand = CGEAddNodeCommand.new(
         self,
     )
