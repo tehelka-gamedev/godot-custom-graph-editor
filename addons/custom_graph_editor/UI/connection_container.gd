@@ -11,7 +11,7 @@ extends Control
 signal request_link(start_node: CGEGraphNodeUI, end_node: CGEGraphNodeUI)
 
 ## Preloaded scene for graph link UI for preview
-const graph_link_ui_scene = preload("res://addons/graph_editor/UI/graph_link_ui.tscn")
+const graph_link_ui_scene = preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
 
 # References to the nodes involved in the current connection
 var _connection_start_node: CGEGraphNodeUI = null

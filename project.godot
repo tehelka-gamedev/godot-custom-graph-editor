@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Godot Custom Graph Editor"
+run/main_scene="uid://ca3bvai5fvsfx"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="uid://bo5ytn20nnxr2"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/graph_editor/plugin.cfg", "res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/custom_graph_editor/plugin.cfg", "res://addons/gut/plugin.cfg")
 
 [rendering]
 

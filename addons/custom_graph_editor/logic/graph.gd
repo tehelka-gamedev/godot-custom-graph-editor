@@ -18,9 +18,9 @@ signal link_deleted(link_id: int)
 static var NEXT_NODE_ID = 0
 
 ## Class used for nodes. Override this with your own node class if needed.
-var node_class: GDScript = preload("res://addons/graph_editor/logic/graph_node.gd")
+var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd")
 ## Class used for links. Override this with your own link class if needed.
-var link_class: GDScript = preload("res://addons/graph_editor/logic/graph_link.gd")
+var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
 
 ## Type of the graph (directed or undirected). See [constant CGEEnum.GraphType]
 var graph_type: CGEEnum.GraphType = CGEEnum.GraphType.DIRECTED

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwf4npc812g1k"]
 
-[ext_resource type="Script" uid="uid://bgnn6dowfoojj" path="res://addons/graph_editor/UI/tool_bar.gd" id="1_mmqea"]
+[ext_resource type="Script" uid="uid://bgnn6dowfoojj" path="res://addons/custom_graph_editor/UI/tool_bar.gd" id="1_mmqea"]
 
 [node name="CGEToolBar" type="PanelContainer"]
 offset_right = 1280.0

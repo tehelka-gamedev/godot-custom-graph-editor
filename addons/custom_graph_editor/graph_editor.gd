@@ -43,13 +43,13 @@ const OFFSET_DISTANCE = 15.0
 
 @export_category("Nodes reference")
 ## Graph UI node (scene) used in the editor
-@export var graph_node_ui_scene := preload("res://addons/graph_editor/UI/graph_node_ui.tscn")
+@export var graph_node_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_node_ui.tscn")
 ## Graph UI link (scene) used in the editor
-@export var graph_link_ui_scene := preload("res://addons/graph_editor/UI/graph_link_ui.tscn")
+@export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
 ## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode
-@export var node_class: GDScript = preload("res://addons/graph_editor/logic/graph_node.gd")
+@export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd")
 ## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink
-@export var link_class: GDScript = preload("res://addons/graph_editor/logic/graph_link.gd")
+@export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
 
 @export_category("Graph Editor Settings")
 ## Current zoom amount

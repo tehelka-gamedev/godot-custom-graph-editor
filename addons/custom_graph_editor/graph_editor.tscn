@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://ca3bvai5fvsfx"]
 
-[ext_resource type="Script" uid="uid://bhqmn1g34sqb" path="res://addons/graph_editor/graph_editor.gd" id="1_0lrtg"]
-[ext_resource type="Script" uid="uid://dme7snxgi16we" path="res://addons/graph_editor/UI/grid.gd" id="2_1no42"]
-[ext_resource type="PackedScene" uid="uid://cwf4npc812g1k" path="res://addons/graph_editor/UI/tool_bar.tscn" id="3_cyrbm"]
+[ext_resource type="Script" uid="uid://bhqmn1g34sqb" path="res://addons/custom_graph_editor/graph_editor.gd" id="1_0lrtg"]
+[ext_resource type="Script" uid="uid://dme7snxgi16we" path="res://addons/custom_graph_editor/UI/grid.gd" id="2_1no42"]
+[ext_resource type="PackedScene" uid="uid://cwf4npc812g1k" path="res://addons/custom_graph_editor/UI/tool_bar.tscn" id="3_cyrbm"]
 
 [node name="GraphEditor" type="Control"]
 layout_mode = 3

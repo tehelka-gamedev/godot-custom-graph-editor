@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddw434gefd7c7"]
+
+[ext_resource type="Script" uid="uid://d0b7wmotljjkc" path="res://addons/custom_graph_editor/UI/graph_link_ui.gd" id="1_s5bff"]
+[ext_resource type="Texture2D" uid="uid://bh6h1wt124yom" path="res://addons/custom_graph_editor/images/arrow_right-white.svg" id="2_bjx1s"]
+
+[node name="CGEGraphLink" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_s5bff")
+arrow_texture = ExtResource("2_bjx1s")

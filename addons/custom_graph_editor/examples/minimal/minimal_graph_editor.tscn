@@ -1,0 +1,9 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2vx8ymqvfabc"]
+
+[ext_resource type="PackedScene" uid="uid://ca3bvai5fvsfx" path="res://addons/custom_graph_editor/graph_editor.tscn" id="1_base_editor"]
+[ext_resource type="Script" uid="uid://e3iaf1k7udrh" path="res://addons/custom_graph_editor/examples/minimal/custom_node.gd" id="2_custom_node"]
+[ext_resource type="PackedScene" uid="uid://bw8x3ymqvfuvk" path="res://addons/custom_graph_editor/examples/minimal/custom_node_ui.tscn" id="3_custom_node_ui"]
+
+[node name="MinimalGraphEditor" instance=ExtResource("1_base_editor")]
+graph_node_ui_scene = ExtResource("3_custom_node_ui")
+node_class = ExtResource("2_custom_node")

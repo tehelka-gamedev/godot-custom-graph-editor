@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bw8x3ymqvfuvk"]
 
-[ext_resource type="Script" path="res://addons/graph_editor/examples/minimal/custom_node_ui.gd" id="1_minimal_node_ui"]
+[ext_resource type="Script" uid="uid://cpg1c3p0s3q6b" path="res://addons/custom_graph_editor/examples/minimal/custom_node_ui.gd" id="1_minimal_node_ui"]
 
 [node name="MinimalCustomNodeUI" type="Control"]
 custom_minimum_size = Vector2(100, 60)
