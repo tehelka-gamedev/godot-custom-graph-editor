@@ -1,0 +1,124 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8y2jlam3xabc"]
+
+[ext_resource type="PackedScene" uid="uid://ca3bvai5fvsfx" path="res://addons/custom_graph_editor/graph_editor.tscn" id="1_base_editor"]
+[ext_resource type="Script" uid="uid://dgyro7i55mbpv" path="res://addons/custom_graph_editor/examples/location_map/location_map_editor.gd" id="2_location_map_editor"]
+[ext_resource type="Script" uid="uid://cmo5ioy5hgh1s" path="res://addons/custom_graph_editor/examples/location_map/location_node.gd" id="3_location_node"]
+[ext_resource type="PackedScene" uid="uid://crq1g8y0jmlbn" path="res://addons/custom_graph_editor/examples/location_map/location_node_ui.tscn" id="4_location_node_ui"]
+[ext_resource type="Script" uid="uid://cp8e01s2ovuwd" path="res://addons/custom_graph_editor/examples/location_map/travel_path.gd" id="5_travel_path"]
+[ext_resource type="PackedScene" uid="uid://b6iq8rxm4xbry" path="res://addons/custom_graph_editor/examples/location_map/travel_path_ui.tscn" id="6_travel_path_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inspector"]
+bg_color = Color(0.15, 0.15, 0.18, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.45, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="LocationMapEditor" instance=ExtResource("1_base_editor")]
+script = ExtResource("2_location_map_editor")
+graph_node_ui_scene = ExtResource("4_location_node_ui")
+graph_link_ui_scene = ExtResource("6_travel_path_ui")
+node_class = ExtResource("3_location_node")
+link_class = ExtResource("5_travel_path")
+
+[node name="Grid" parent="." index="0"]
+offset = Vector2(460.8, 259.2)
+
+[node name="Content" parent="." index="1"]
+offset_left = 460.8
+offset_top = 259.2
+offset_right = 460.80005
+offset_bottom = 259.2
+
+[node name="HScrollBar" parent="." index="2"]
+page = 921.6
+value = -460.8
+
+[node name="VScrollBar" parent="." index="3"]
+page = 518.4
+value = -259.2
+
+[node name="InspectorPanel" type="PanelContainer" parent="." index="5"]
+unique_name_in_owner = true
+z_index = 20
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_top = 45.0
+offset_right = -10.0
+offset_bottom = 300.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_inspector")
+
+[node name="MarginContainer" type="MarginContainer" parent="InspectorPanel" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InspectorPanel/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="InspectorPanel/MarginContainer/VBoxContainer" index="0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Inspector"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="InspectorPanel/MarginContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="NodeInspector" type="VBoxContainer" parent="InspectorPanel/MarginContainer/VBoxContainer" index="2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="NodeNameLabel" type="Label" parent="InspectorPanel/MarginContainer/VBoxContainer/NodeInspector" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Location (ID: 2)"
+
+[node name="HSeparator2" type="HSeparator" parent="InspectorPanel/MarginContainer/VBoxContainer/NodeInspector" index="1"]
+layout_mode = 2
+
+[node name="LocationNameLabel" type="Label" parent="InspectorPanel/MarginContainer/VBoxContainer/NodeInspector" index="2"]
+layout_mode = 2
+text = "Location Name:"
+
+[node name="LocationNameEdit" type="LineEdit" parent="InspectorPanel/MarginContainer/VBoxContainer/NodeInspector" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Location"
+placeholder_text = "Enter location name"
+
+[node name="LinkInspector" type="VBoxContainer" parent="InspectorPanel/MarginContainer/VBoxContainer" index="3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="LinkNameLabel" type="Label" parent="InspectorPanel/MarginContainer/VBoxContainer/LinkInspector" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Travel Path (ID: 0)"
+
+[node name="HSeparator2" type="HSeparator" parent="InspectorPanel/MarginContainer/VBoxContainer/LinkInspector" index="1"]
+layout_mode = 2
+
+[node name="TravelCostLabel" type="Label" parent="InspectorPanel/MarginContainer/VBoxContainer/LinkInspector" index="2"]
+layout_mode = 2
+text = "Travel Cost:"
+
+[node name="TravelCostEdit" type="SpinBox" parent="InspectorPanel/MarginContainer/VBoxContainer/LinkInspector" index="3"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 999.0
+value = 1.0

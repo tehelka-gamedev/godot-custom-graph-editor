@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://crq1g8y0jmlbn"]
+
+[ext_resource type="Script" path="res://addons/custom_graph_editor/examples/location_map/location_node_ui.gd" id="1_location_node_ui"]
+
+[node name="LocationNodeUI" type="Control"]
+custom_minimum_size = Vector2(120, 60)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_location_node_ui")
+
+[node name="LocationLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -11.5
+offset_right = 60.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Location"
+horizontal_alignment = 1
+vertical_alignment = 1

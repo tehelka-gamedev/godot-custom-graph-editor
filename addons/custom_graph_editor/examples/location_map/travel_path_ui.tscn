@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6iq8rxm4xbry"]
+
+[ext_resource type="Script" path="res://addons/custom_graph_editor/examples/location_map/travel_path_ui.gd" id="1_travel_path_ui"]
+[ext_resource type="Texture2D" uid="uid://bh6h1wt124yom" path="res://addons/custom_graph_editor/images/arrow_right-white.svg" id="2_arrow"]
+
+[node name="TravelPathUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_travel_path_ui")
+arrow_texture = ExtResource("2_arrow")
+
+[node name="CostLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 23.0
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
