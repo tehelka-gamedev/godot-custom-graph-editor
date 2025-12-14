@@ -8,10 +8,6 @@ extends CGEGraphElementUI
 ## Emitted when the node is moved. Useful for linked elements to update their position.
 signal moved
 
-## Label node to show the node ID
-# TODO: delete it, it is only for testing !!
-@export var label: Label = null
-
 
 func _init():
     focus_mode = Control.FOCUS_NONE
@@ -32,14 +28,6 @@ func _draw():
 func serialize() -> Dictionary:
     var data: Dictionary = super()
     return data
-
-
-## Called when the graph element is set or updated
-## Updates the test label if present
-# TODO: delete this when label is removed (only for testing)
-func _on_graph_element_updated() -> void:
-    if label and graph_element:
-        label.text = "%d" % [graph_element.id]
 
 
 ## Set the minimum size of the node UI.
