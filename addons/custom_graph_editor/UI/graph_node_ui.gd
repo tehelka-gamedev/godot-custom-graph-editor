@@ -37,7 +37,8 @@ func serialize() -> Dictionary:
 ## Deserialize the node UI state from a dictionary. See [method CGEGraphElement.deserialize].
 func deserialize(data: Dictionary) -> void:
     super(data)
-    label.text = str(graph_element.id)
+    if label:
+        label.text = str(graph_element.id)
 
 
 ## Set the graph element associated with this UI. See [method CGEGraphElementUI.set_graph_element].
