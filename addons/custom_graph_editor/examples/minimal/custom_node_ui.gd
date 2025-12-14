@@ -29,27 +29,15 @@ func _draw() -> void:
     draw_rect(Rect2(Vector2.ZERO, size), border_color, false, border_width)
 
 
-## Serialize the node UI data. Not needed here, as the UI part has no extra data, but added for completeness of the example.
-func serialize() -> Dictionary:
-    var data: Dictionary = super()
-    return data
-
-
-## Deserialize the node UI data and update the label. # Not needed here as the UI reacts when graph_element is set, but the method is added for completeness of the example.
-func deserialize(data: Dictionary) -> void:
-    super(data)
-    # No need to do anything extra here, as the label is updated when the graph element is set, and it is deserialized before that.
-
-
-## Update the UI when the graph element is set
-func set_graph_element(elem: CGEGraphElement) -> void:
-    super(elem)
+## Called when the graph element is set or updated
+## This is called both when creating new nodes and when loading from file
+func _on_graph_element_updated() -> void:
     _update_node_label()
 
 
 func _update_node_label() -> void:
     var custom_node: MinimalCustomNode = graph_element as MinimalCustomNode
-    if name_label:
+    if name_label and custom_node:
         name_label.text = "%s %d" % [custom_node.node_name, graph_element.id]
 
 

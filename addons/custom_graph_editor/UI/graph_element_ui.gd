@@ -31,9 +31,19 @@ func is_selected() -> bool:
     return selected
 
 
-## Set the graph element this UI represents. Override this method to add custom behavior when setting the graph element (like updating labels, etc).
+## Set the graph element this UI represents.
+## This is the property setter for [member graph_element].
+## Override [method _on_graph_element_updated] instead to add custom UI update logic.
 func set_graph_element(elem: CGEGraphElement) -> void:
     graph_element = elem
+    _on_graph_element_updated()
+
+
+## Called when the graph element data has been set or updated.
+## Override this method in subclasses to update UI elements (labels, colors, etc) based on the graph element's data.
+## This is called both when the element is initially set and after deserialization.
+func _on_graph_element_updated() -> void:
+    pass  # Override in subclasses
 
 
 ## Get the ID of the graph element this UI represents. This is a shortcut for [code]graph_element.id[/code].
@@ -57,3 +67,6 @@ func deserialize(data: Dictionary) -> void:
     graph_element.deserialize(data)
     if data.has("position"):
         position = str_to_var(data["position"]) # TODO: maybe do not str_to_var here, potentially unsafe...
+
+    # Update UI to reflect the deserialized data
+    _on_graph_element_updated()
