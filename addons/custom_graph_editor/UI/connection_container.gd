@@ -10,8 +10,10 @@ extends Control
 ## Emitted when a link is requested between two nodes. This is emitted when the user finishes creating a connection.
 signal request_link(start_node: CGEGraphNodeUI, end_node: CGEGraphNodeUI)
 
-## Preloaded scene for graph link UI for preview
-const graph_link_ui_scene = preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
+## Scene to use for creating link UI instances (for preview only)
+## This is set by the graph editor to match its graph_link_ui_scene. Not ideal and the truth should be at one position. That may be improved
+## in the future.
+var link_ui_scene: PackedScene = preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
 
 # References to the nodes involved in the current connection
 var _connection_start_node: CGEGraphNodeUI = null
@@ -23,7 +25,7 @@ var _connection_temp: CGEGraphLinkUI = null
 func start_connecting(node: CGEGraphNodeUI, mouse_world_coord: Vector2) -> void:
     _connection_start_node = node
 
-    _connection_temp = graph_link_ui_scene.instantiate()
+    _connection_temp = link_ui_scene.instantiate()
     add_child(_connection_temp)
     _connection_temp.start_node = node
 

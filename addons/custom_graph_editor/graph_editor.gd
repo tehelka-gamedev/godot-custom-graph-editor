@@ -203,6 +203,8 @@ func _ready():
     _content.add_child(_connections)
     queue_redraw()
 
+    # Configure the connection container to use the same link UI scene as the editor
+    _connections.link_ui_scene = graph_link_ui_scene
     _connections.request_link.connect(_on_new_link_requested)
 
     graph.node_created.connect(_on_node_created)
