@@ -74,6 +74,18 @@ func set_file_modified(value: bool) -> void:
 ## Initialize the tool bar by add-in popup-menu items, their shortcuts and connect signals.[br]
 ## Override this function to customize the tool bar with more items.
 func _init_tool_bar() -> void:
+    # Clear existing items (important for @tool scripts with multiple instances)
+    file_popup_menu.clear()
+    edit_popup_menu.clear()
+
+    # Disconnect previous signals if any (to avoid duplicate connections)
+    if add_node_button.pressed.is_connected(add_node_requested.emit):
+        add_node_button.pressed.disconnect(add_node_requested.emit)
+    if file_popup_menu.index_pressed.is_connected(_on_file_item_pressed):
+        file_popup_menu.index_pressed.disconnect(_on_file_item_pressed)
+    if edit_popup_menu.index_pressed.is_connected(_on_edit_item_pressed):
+        edit_popup_menu.index_pressed.disconnect(_on_edit_item_pressed)
+
     add_node_button.pressed.connect(add_node_requested.emit)
 
     ## File
