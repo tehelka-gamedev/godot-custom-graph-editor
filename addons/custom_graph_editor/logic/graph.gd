@@ -270,7 +270,7 @@ func _sync_id_counter() -> void:
     
     var max_node_id: int = _nodes.keys().max()
     var max_link_id: int = _links.keys().max() if not _links.is_empty() else -1
-    var NEXT_NODE_ID = max(max_node_id, max_link_id) + 1
+    NEXT_NODE_ID = max(max_node_id, max_link_id) + 1
 
 
 ## Remove all nodes and links in the graph.

@@ -461,6 +461,8 @@ func deserialize(data: Dictionary) -> void:
         graph.create_link(link_data.start_node_id, link_data.end_node_id, link_data.id)
         # Update the link UI with deserialized data
         get_graph_link(link_id).deserialize(links_data[link_id_str])
+    
+    graph._sync_id_counter() # Should maybe call graph.deserialize first ?
 
 
 ## Save the graph to a file. Called when a file is chosen in the save file dialog.
