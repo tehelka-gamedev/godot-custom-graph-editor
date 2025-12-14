@@ -457,7 +457,10 @@ func deserialize(data: Dictionary) -> void:
         var link_id: int = int(link_id_str)
         var link_data = link_class.new(link_id)
         link_data.deserialize(links_data[link_id_str])
+        # Create the link (logic part)
         graph.create_link(link_data.start_node_id, link_data.end_node_id, link_data.id)
+        # Update the link UI with deserialized data
+        get_graph_link(link_id).deserialize(links_data[link_id_str])
 
 
 ## Save the graph to a file. Called when a file is chosen in the save file dialog.
