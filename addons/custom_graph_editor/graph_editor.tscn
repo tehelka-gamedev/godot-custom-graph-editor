@@ -27,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_1no42")
-offset = Vector2(512, 288)
+offset = Vector2(460.8, 259.2)
 metadata/_edit_lock_ = true
 
 [node name="Content" type="Control" parent="."]
@@ -37,10 +37,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 512.0
-offset_top = 288.0
-offset_right = 512.0
-offset_bottom = 288.0
+offset_left = 460.8
+offset_top = 259.2
+offset_right = 460.80005
+offset_bottom = 259.2
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
@@ -59,8 +59,8 @@ grow_horizontal = 2
 grow_vertical = 0
 min_value = -4000.0
 max_value = 4000.0
-page = 1024.0
-value = -512.0
+page = 921.6
+value = -460.8
 
 [node name="VScrollBar" type="VScrollBar" parent="."]
 unique_name_in_owner = true
@@ -76,10 +76,10 @@ grow_horizontal = 0
 grow_vertical = 2
 min_value = -2000.0
 max_value = 2000.0
-page = 576.0
-value = -288.0
+page = 518.4
+value = -259.2
 
 [node name="CGEToolBar" parent="." instance=ExtResource("3_cyrbm")]
 unique_name_in_owner = true
 z_index = 10
-layout_mode = 0
+layout_mode = 1
