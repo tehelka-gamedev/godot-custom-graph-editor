@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Godot Custom Graph Editor"
-run/main_scene="uid://ca3bvai5fvsfx"
+run/main_scene="uid://bfj8yvxkwn0h5"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="uid://bo5ytn20nnxr2"
 

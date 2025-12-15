@@ -1,0 +1,126 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfj8yvxkwn0h5"]
+
+[ext_resource type="Script" uid="uid://bhonxrm7tn81p" path="res://demo_menu.gd" id="1_demo_menu"]
+
+[sub_resource type="Gradient" id="Gradient_5vskn"]
+colors = PackedColorArray(0.14700636, 0.17211476, 0.28233087, 1, 0.13389999, 0.14493558, 0.19454, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bb7e1"]
+gradient = SubResource("Gradient_5vskn")
+fill_to = Vector2(0, 1)
+
+[node name="DemoMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_demo_menu")
+
+[node name="DemoSelectorContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="DemoSelectorContainer"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_bb7e1")
+
+[node name="DemoSelectorContent" type="MarginContainer" parent="DemoSelectorContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Custom Graph Editor - Demo"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Select an example to explore:"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 15
+
+[node name="MinimalButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Minimal Example"
+
+[node name="MinimalDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "A basic graph editor with simple nodes and links"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer2" type="Control" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="LocationMapButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Location Map Example"
+
+[node name="LocationMapDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "An advanced example showing a location/travel map editor with extended nodes and links"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Footer" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_font_sizes/font_size = 12
+text = "Press ESC in any example to return to this menu"
+horizontal_alignment = 1
+
+[node name="DemoModeESCPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 43.0
+offset_top = 550.0
+offset_right = 240.0
+offset_bottom = 599.0
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="DemoModeESCPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="DemoModeESCPanel/MarginContainer"]
+layout_mode = 2
+text = "Demo mode: press ESC to
+return to demo selection"
