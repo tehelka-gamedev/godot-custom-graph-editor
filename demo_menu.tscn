@@ -104,6 +104,14 @@ theme_override_font_sizes/font_size = 12
 text = "Press ESC in any example to return to this menu"
 horizontal_alignment = 1
 
+[node name="LabelControls" type="Label" parent="DemoSelectorContainer/DemoSelectorContent"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Controls:
+Left-click: selection and move by dragging
+Right-click: create links between nodes"
+
 [node name="DemoModeESCPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
