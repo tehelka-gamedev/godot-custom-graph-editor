@@ -33,7 +33,15 @@ func _ready() -> void:
     # Connect to selection signals
     graph_element_selected.connect(_on_graph_element_selected)
 
-    load_from_file(get_script().get_path().get_base_dir() + "/" + DEFAULT_GRAPH_PATH)
+    var file_path_to_load: String = get_script().get_path().get_base_dir() + "/" + DEFAULT_GRAPH_PATH
+
+    # If the demo file exists, load it, otherwise (for web, for instance) load an hardcoded graph as backup
+    if FileAccess.file_exists(file_path_to_load):
+        load_from_file(get_script().get_path().get_base_dir() + "/" + DEFAULT_GRAPH_PATH)
+    else:
+        deserialize(DEMO_GRAPH_BACKUP_WEB)
+        _command_history.clear_all()
+
     clear_selection()
 
 
@@ -141,3 +149,54 @@ func clear_selection() -> void:
     super()
     _inspected_element = null
     _hide_all_inspectors()
+
+
+var DEMO_GRAPH_BACKUP_WEB: Dictionary = {
+	"links": {
+		"3": {
+			"end_node_id": 1,
+			"id": 3,
+			"position": "Vector2(-137.79999, 127.79999)",
+			"start_node_id": 0,
+			"travel_cost": 1
+		},
+		"4": {
+			"end_node_id": 2,
+			"id": 4,
+			"position": "Vector2(-137.79999, 127.79999)",
+			"start_node_id": 0,
+			"travel_cost": 5
+		},
+		"5": {
+			"end_node_id": 1,
+			"id": 5,
+			"position": "Vector2(94.20001, 10.799988)",
+			"start_node_id": 2,
+			"travel_cost": 5
+		},
+		"6": {
+			"end_node_id": 0,
+			"id": 6,
+			"position": "Vector2(94.20001, 10.799988)",
+			"start_node_id": 2,
+			"travel_cost": 5
+		}
+	},
+	"nodes": {
+		"0": {
+			"id": 0,
+			"location_name": "Farm",
+			"position": "Vector2(-197.79999, 97.79999)"
+		},
+		"1": {
+			"id": 1,
+			"location_name": "River",
+			"position": "Vector2(69.20001, 136.79999)"
+		},
+		"2": {
+			"id": 2,
+			"location_name": "Mountains",
+			"position": "Vector2(34.200012, -19.200012)"
+		}
+	}
+}
