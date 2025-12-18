@@ -6,26 +6,15 @@
 ![Godot 4.5+](https://img.shields.io/badge/Godot-4.5%2B-blue.svg)
 [![Itch.io web test](https://img.shields.io/badge/Test%20demo%20on%20itch.io-FA5C5C?style=flat-square&logo=itchdotio&logoColor=white)](https://tehelka.itch.io/godot-custom-graph-editor)
 
-<div style="display: flex; align-items: center;">
-
-  <img src="images/cge_logo_128.png" alt="Godot Custom Graph Editor Logo" style="margin-right: 20px;"/>
-    A Godot 4.5+ add-on to build custom directed and undirected graph editor tailored to any project.
+<div align="center">
+    <img src="images/cge_logo_128.png" alt="Logo"/>
+  
+  **A Godot 4.5+ add-on to build custom directed and undirected graph editor tailored to any project.**  
 </div>
 
 
 <div align="center">
-<table>
-    <tr>
-    <td width="50%">
-        <img src="images/location_graph_editor_preview.gif" title="Location Map Example"></video>
-        <p align="center"><em>Location Map Example</em></p>
-    </td>
-    <td width="50%">
-        <img src="images/minimal_graph_editor_preview.gif" title="Minimal Example"></video>
-        <p align="center"><em>Minimal Example</em></p>
-    </td>
-    </tr>
-</table>
+    <img src="images/location_graph_editor_preview.gif" alt="Location Map Example" width="49%"/> <img src="images/minimal_graph_editor_preview.gif" alt="Minimal Example" width="49%"/>
 </div>
 
 
