@@ -56,7 +56,7 @@ func get_id() -> int:
 func serialize() -> Dictionary:
     var data: Dictionary = graph_element.serialize()
 
-    data["position"] = var_to_str(position)
+    data["position"] = {"x": position.x, "y": position.y}
 
     return data
 
@@ -66,7 +66,9 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary) -> void:
     graph_element.deserialize(data)
     if data.has("position"):
-        position = str_to_var(data["position"]) # TODO: maybe do not str_to_var here, potentially unsafe...
+        var pos = data["position"] 
+        position = Vector2(float(pos["x"]), float(pos["y"]))
+
 
     # Update UI to reflect the deserialized data
     _on_graph_element_updated()

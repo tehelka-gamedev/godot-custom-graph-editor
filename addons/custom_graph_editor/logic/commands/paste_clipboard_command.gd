@@ -36,7 +36,7 @@ func _init(graph_ed: CGEGraphEditor, nodes_data_from_clipboard: Array[Dictionary
         # Getting the key for id and position like this is not ideal, maybe make a getter instead ?
         _old_nodes_ids.append(int(node_data["id"]))
         node_data.erase("id")
-        _nodes_position.append(str_to_var(node_data["position"]) + offset) # TODO: maybe do not str_to_var here, potentially unsafe...
+        _nodes_position.append(Vector2(float(node_data["position"]["x"]), float(node_data["position"]["y"])) + offset) 
         # position is not needed anymore in the node_data, and we don't want it to overrride the position later when we deserialize, so we remove it
         node_data.erase("position")
 

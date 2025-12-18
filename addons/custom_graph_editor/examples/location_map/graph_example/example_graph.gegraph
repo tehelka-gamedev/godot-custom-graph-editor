@@ -3,28 +3,40 @@
 		"3": {
 			"end_node_id": 1,
 			"id": 3,
-			"position": "Vector2(-137.79999, 127.79999)",
+			"position": {
+				"x": -137.799987792969,
+				"y": 127.799987792969
+			},
 			"start_node_id": 0,
 			"travel_cost": 1
 		},
 		"4": {
 			"end_node_id": 2,
 			"id": 4,
-			"position": "Vector2(-137.79999, 127.79999)",
+			"position": {
+				"x": -137.799987792969,
+				"y": 127.799987792969
+			},
 			"start_node_id": 0,
 			"travel_cost": 5
 		},
 		"5": {
 			"end_node_id": 1,
 			"id": 5,
-			"position": "Vector2(94.20001, 10.799988)",
+			"position": {
+				"x": 94.2000122070313,
+				"y": 10.7999877929688
+			},
 			"start_node_id": 2,
 			"travel_cost": 5
 		},
 		"6": {
 			"end_node_id": 0,
 			"id": 6,
-			"position": "Vector2(94.20001, 10.799988)",
+			"position": {
+				"x": 94.2000122070313,
+				"y": 10.7999877929688
+			},
 			"start_node_id": 2,
 			"travel_cost": 5
 		}
@@ -33,17 +45,26 @@
 		"0": {
 			"id": 0,
 			"location_name": "Farm",
-			"position": "Vector2(-197.79999, 97.79999)"
+			"position": {
+				"x": -197.799987792969,
+				"y": 97.7999877929688
+			}
 		},
 		"1": {
 			"id": 1,
 			"location_name": "River",
-			"position": "Vector2(69.20001, 136.79999)"
+			"position": {
+				"x": 69.2000122070313,
+				"y": 136.799987792969
+			}
 		},
 		"2": {
 			"id": 2,
 			"location_name": "Mountains",
-			"position": "Vector2(34.200012, -19.200012)"
+			"position": {
+				"x": 34.2000122070313,
+				"y": -19.2000122070313
+			}
 		}
 	}
 }
