@@ -17,11 +17,11 @@
 <table>
     <tr>
     <td width="50%">
-        <video width="100%" controls src="images/location_graph_editor_preview.mp4" title="Location Map Example"></video>
+        <img src="images/location_graph_editor_preview.gif" title="Location Map Example"></video>
         <p align="center"><em>Location Map Example</em></p>
     </td>
     <td width="50%">
-        <video width="100%" controls src="images/minimal_graph_editor_preview.mp4" title="Minimal Example"></video>
+        <img src="images/minimal_graph_editor_preview.gif" title="Minimal Example"></video>
         <p align="center"><em>Minimal Example</em></p>
     </td>
     </tr>
