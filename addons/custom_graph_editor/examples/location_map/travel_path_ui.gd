@@ -25,7 +25,7 @@ func _draw() -> void:
 
 ## Called when the graph element is set or updated
 ## This is called both when creating new links and when loading from file
-func _on_graph_element_updated() -> void:
+func _update_ui_from_data() -> void:
     _update_cost_label()
 
 
