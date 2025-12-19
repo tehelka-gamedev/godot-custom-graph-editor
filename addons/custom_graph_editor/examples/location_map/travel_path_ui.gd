@@ -47,3 +47,15 @@ func _position_cost_label() -> void:
 
         # Position the label at the midpoint
         cost_label.position = midpoint - cost_label.size / 2
+
+
+## TODO
+func _setup_inspector(inspector: CGEInspectorPanel) -> void:
+    var travel_path: TravelPath = graph_element as TravelPath
+    inspector.add_property(
+        "Travel Cost",
+        func(): return travel_path.travel_cost,
+        func(value) -> bool:
+            travel_path.travel_cost = value
+            return true
+    )

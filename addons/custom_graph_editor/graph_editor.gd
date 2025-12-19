@@ -131,7 +131,8 @@ func _on_graph_element_deselected(element: CGEGraphElementUI) -> void:
 ## Called when the selection is cleared.
 ## Override this in child classes to customize behavior when selection is cleared.
 func _on_selection_cleared() -> void:
-    pass
+    if _inspector_panel:
+        _inspector_panel.clear()
 
 
 # Grid drawn in the background
@@ -143,6 +144,8 @@ func _on_selection_cleared() -> void:
 @onready var _v_scroll_bar: VScrollBar = %VScrollBar
 # Toolbar reference (see [CGEToolBar])
 @onready var _toolbar: CGEToolBar = %CGEToolBar
+# Inspector panel reference (see [CGEInspectorPanel])
+@onready var _inspector_panel: CGEInspectorPanel = %InspectorPanel
 
 ## Given a path to a .gegraph, returns a deserialized CGEGraph
 ## allowing to have just node and connectivity info and scrap out
@@ -222,6 +225,9 @@ func _ready():
     # Set initial page size and center the view
     _update_scrollbar_pages()
     _center_scrollbars()
+
+    if _inspector_panel:
+        graph_element_selected.connect(_inspector_panel._on_element_selected)
 
 
 # Redraw the editor each frame for simplicity

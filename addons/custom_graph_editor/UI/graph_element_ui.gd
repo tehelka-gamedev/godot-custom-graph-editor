@@ -72,3 +72,9 @@ func deserialize(data: Dictionary) -> void:
 
     # Update UI to reflect the deserialized data
     _update_ui_from_data()
+
+
+## To be overriden
+## TODO
+func _setup_inspector(inspector: CGEInspectorPanel) -> void:
+    pass

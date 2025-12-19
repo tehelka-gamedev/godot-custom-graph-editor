@@ -39,3 +39,16 @@ func _update_location_label() -> void:
     var location_node: LocationNode = graph_element as LocationNode
     if location_label and location_node:
         location_label.text = location_node.location_name
+func _setup_inspector(inspector: CGEInspectorPanel) -> void:
+    inspector.add_property(
+        "Location name",
+        func(): return graph_element.location_name,
+        func(value) -> bool: 
+            if value.length() == 0:
+                return false
+            var location_node: LocationNode = graph_element as LocationNode
+            location_node.location_name = value
+
+            return true
+    )
+

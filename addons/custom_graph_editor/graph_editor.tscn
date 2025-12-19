@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ca3bvai5fvsfx"]
+[gd_scene load_steps=5 format=3 uid="uid://ca3bvai5fvsfx"]
 
 [ext_resource type="Script" uid="uid://bhqmn1g34sqb" path="res://addons/custom_graph_editor/graph_editor.gd" id="1_0lrtg"]
 [ext_resource type="Script" uid="uid://dme7snxgi16we" path="res://addons/custom_graph_editor/UI/grid.gd" id="2_1no42"]
 [ext_resource type="PackedScene" uid="uid://cwf4npc812g1k" path="res://addons/custom_graph_editor/UI/tool_bar.tscn" id="3_cyrbm"]
+[ext_resource type="PackedScene" uid="uid://dol8s5o5krggf" path="res://addons/custom_graph_editor/UI/inspector/inspector_panel.tscn" id="4_f4oab"]
 
 [node name="GraphEditor" type="Control"]
 layout_mode = 3
@@ -83,3 +84,11 @@ value = -259.2
 unique_name_in_owner = true
 z_index = 10
 layout_mode = 1
+
+[node name="InspectorPanel" parent="." instance=ExtResource("4_f4oab")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 813.0
+offset_top = 79.0
+offset_right = -40.0
+offset_bottom = -81.0
