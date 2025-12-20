@@ -46,3 +46,6 @@ func _restore_selection() -> void:
         var link_ui: CGEGraphLinkUI = _graph_editor.get_graph_link(link_id)
         if link_ui != null:
             _graph_editor.select_graph_element(link_ui)
+
+func _to_string():
+    return "CGECommand()"
