@@ -39,6 +39,9 @@ func _update_location_label() -> void:
     var location_node: LocationNode = graph_element as LocationNode
     if location_label and location_node:
         location_label.text = location_node.location_name
+
+
+## TODO
 func _setup_inspector(inspector: CGEInspectorPanel) -> void:
     inspector.add_property(
         "Location name",
@@ -52,3 +55,28 @@ func _setup_inspector(inspector: CGEInspectorPanel) -> void:
             return true
     )
 
+    inspector.add_property(
+        "Read only property",
+        func(): return "ma_property_RO"
+    )
+
+    inspector.add_property(
+        "test bool",
+        func(): return true,
+        func(value) -> bool: 
+            return true
+    )
+
+    inspector.add_property(
+        "test color",
+        func(): return Color.RED,
+        func(value) -> bool: 
+            return true
+    )
+
+    inspector.add_property(
+        "test vector2",
+        func(): return Vector2.ZERO,
+        func(value) -> bool: 
+            return true
+    )

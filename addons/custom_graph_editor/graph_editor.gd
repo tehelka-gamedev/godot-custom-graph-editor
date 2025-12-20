@@ -228,6 +228,7 @@ func _ready():
 
     if _inspector_panel:
         graph_element_selected.connect(_inspector_panel._on_element_selected)
+        _inspector_panel.execute_command_requested.connect(_on_inspector_command_requested)
 
 
 # Redraw the editor each frame for simplicity
@@ -395,6 +396,7 @@ func node_created(node_id: int, new_node: CGEGraphNodeUI) -> void:
 func execute_command(cmd: CGECommand) -> void:
     if cmd.execute():
         _command_history.push(cmd)
+
 
 
 ## Undo the last executed command.
@@ -1180,3 +1182,13 @@ func _on_load_requested() -> void:
 ## Update the modified state based on the command history.
 func _update_modified_state() -> void:
     file_is_modified = _command_history.is_modified()
+
+
+###### INSPECTOR SPECIFIC METHODS
+
+## Called when the inspector requests a command. Executes it (and fill the graph_editor info first)
+func _on_inspector_command_requested(cmd: CGEInspectorCommand) -> void:
+    cmd._graph_editor = self
+    cmd._graph = graph
+
+    execute_command(cmd)
