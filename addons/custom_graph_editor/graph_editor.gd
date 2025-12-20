@@ -409,6 +409,15 @@ func redo() -> void:
     _command_history.redo()
 
 
+## Get the UI element for the given element ID, or null if not found.
+func get_graph_element(element_id: int) -> CGEGraphElementUI:
+    var node: CGEGraphNodeUI = get_graph_node(element_id)
+    if node:
+        return node
+    
+    return get_graph_link(element_id)
+
+
 ## Get the UI node for the given graph node ID, or null if not found.
 func get_graph_node(node_id: int) -> CGEGraphNodeUI:
     return _nodes_ref.get(node_id)
