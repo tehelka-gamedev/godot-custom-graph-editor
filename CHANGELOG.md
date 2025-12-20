@@ -11,15 +11,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Built-in inspector panel for editing node and link properties
   - `CGEInspectorPanel` - Automatically displays and edits properties of selected elements
   - `CGEPropertyRow` - Individual property row with type-based controls
-  - Users implement `_setup_inspector(inspector)` in custom UI classes (nodes and links) to define properties that are shown in the inspector
+  - Users implement `_setup_inspector(inspector)` in custom UI classes (nodes and links) to define properties
     - The type is automatically detected and adequate UI controls are generated
-    - Available property types are string, int, float, bool, color, Vector2 and Vector3.
-    - Properties can be read-only.
+    - Available property types: string, int, float, bool, color, Vector2, Vector3
+    - Properties can be read-only by not providing a setter
+    - **Full undo/redo support**
+- Inspector command system for undoable property changes
+  - `CGEInspectorCommand` - Abstract base class for inspector-related commands
+  - `CGESetPropertyCommand` - Command for property changes with validation and undo/redo support
+- `CustomLineEdit` and `CustomTextEdit` controls that emit signals only when editing is complete (focus lost or Enter pressed)
+- `get_graph_element(element_id)` helper method in `CGEGraphEditor` to retrieve nodes or links by ID without type checking
+- `_to_string()` method for `CGECommand` to improve debugging
 
 ### Changed
 - **BREAKING**: Renamed `_on_graph_element_updated()` to `_update_ui_from_data()` in `CGEGraphElementUI`
-  - This method is now also called when individual properties change from the inspector, not just when the element is replaced. All nodes/links UI classes that overrided this method on the examples have been updated.
-  - Migration: Simply rename `_on_graph_element_updated()` to `_update_ui_from_data()` in your custom UI classes.
+  - This method is now also called when individual properties change from the inspector, not just when the element is replaced
+  - All example nodes/links UI classes have been updated
+  - Migration: Simply rename `_on_graph_element_updated()` to `_update_ui_from_data()` in your custom UI classes
+- Commands can now be created with `null` graph_editor reference (set later by the graph editor)
+  - Enables inspector to create commands without direct reference to graph editor
 
 ### Removed
 - Manual inspector implementation from `location_map` example.
