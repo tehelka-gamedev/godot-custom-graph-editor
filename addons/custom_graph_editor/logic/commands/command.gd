@@ -9,7 +9,7 @@ var _previous_selected_link_ids: Array[int] = []
 
 func _init(graph_ed: CGEGraphEditor) -> void:
     _graph_editor = graph_ed
-    _graph = _graph_editor.graph
+    _graph = _graph_editor.graph if _graph_editor else null
 
 
 ## Execute the command. Returns true if it should be added to history.
