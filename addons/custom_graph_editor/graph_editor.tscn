@@ -87,8 +87,9 @@ layout_mode = 1
 
 [node name="InspectorPanel" parent="." instance=ExtResource("4_f4oab")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
-offset_left = 813.0
+offset_left = 787.0
 offset_top = 79.0
 offset_right = -40.0
 offset_bottom = -81.0
