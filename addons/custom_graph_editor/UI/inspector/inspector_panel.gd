@@ -15,6 +15,9 @@ var _property_rows: Dictionary[String, CGEPropertyRow] = {}
 
 @onready var _properties_container: VBoxContainer = %PropertiesVBoxContainer
 
+func _ready() -> void:
+    _refresh_visibility()
+
 
 func add_property(property_name: String, getter: Callable, setter: Callable = Callable()):
     # Try the getter to get the type of value
@@ -38,15 +41,17 @@ func _on_element_selected(element_ui: CGEGraphElementUI) -> void:
     _clear_properties()
     _current_element = element_ui
 
-    if _current_element == null:
-        return
-
-    _current_element._setup_inspector(self)
+    if _current_element != null:
+        _current_element._setup_inspector(self)
+    
+    _refresh_visibility()
 
 
 func _clear_properties() -> void:
     for c in _properties_container.get_children():
         c.queue_free()
+    _property_rows.clear()
+    _refresh_visibility()
 
 
 func clear() -> void:
@@ -91,3 +96,16 @@ func refresh_property(element_id: int, prop_name: String, value: Variant) -> voi
         return
     
     prop.set_value(value)
+
+
+# Refresh the inspector visibility depending on if there are properties to show or not
+func _refresh_visibility() -> void:
+    if _current_element == null:
+        visible = false
+        return
+    
+    if _property_rows.is_empty():
+        visible = false
+        return
+
+    visible = true
