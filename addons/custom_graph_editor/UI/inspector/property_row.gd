@@ -13,13 +13,10 @@ var _control: Control = null
 var _set_value_method: Callable = Callable()
 var _read_only: bool = false
 
+
+## Setup the row by creating a control of the appropriate type
 func setup(display_name: String, value: Variant, value_type: int, read_only: bool) -> void:
-    _label.text = display_name
-    _read_only = read_only
-
-
-    if _control:
-        _control.queue_free()
+    _setup_common(display_name, read_only)
 
     _control = _create_control_for_type(value_type, value)
 
@@ -41,6 +38,137 @@ func set_value(value: Variant) -> void:
     
     _set_value_method.call(value)
     
+
+## Special setup for enum values.
+func setup_enum(display_name: String, current_value: Variant, enum_values: Array) -> void:
+    const read_only: bool = false   # enums cannot be readonly, they are displayed as string instead is the user did not set a setter
+    _setup_common(display_name, read_only)
+
+    var option_button: OptionButton = OptionButton.new()
+    option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+    # Fill in enum values
+    for i in range(enum_values.size()):
+        option_button.add_item(str(enum_values[i]), i)
+
+    # Set the current selection
+    var current_index: int = enum_values.find(current_value)
+    if current_index != -1:
+        option_button.selected = current_index
+
+    # Connect signal
+    option_button.item_selected.connect(func(index: int): value_changed.emit(enum_values[index]))
+
+    _set_value_method = func(value):
+        var index: int = enum_values.find(value)
+        if index != -1:
+            option_button.selected = index
+
+    _control = option_button
+    add_child(_control)
+
+
+## Special setup for range values, composed of a slider + a spinbox to set a value
+func setup_range(display_name: String, current_value: float, min_value: float, max_value: float, step: float, is_int: bool) -> void:
+    const  read_only: bool = false # range cannot be readonly, it is just a normal property int/float, if the user did not set a setter
+    _setup_common(display_name, read_only)
+
+    var container: HBoxContainer = HBoxContainer.new()
+    container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    container.add_theme_constant_override("separation", 4)
+
+    # Create slider
+    var slider: HSlider = HSlider.new()
+    slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    slider.min_value = min_value
+    slider.max_value = max_value
+    slider.step = step
+    slider.value = current_value
+    slider.custom_minimum_size.x = 100
+
+    # Create spinbox
+    var spin: SpinBox = SpinBox.new()
+    spin.custom_minimum_size.x = 60
+    spin.value = current_value
+    spin.min_value = min_value
+    spin.max_value = max_value
+    spin.step = step
+    spin.rounded = is_int
+    spin.allow_greater = false
+    spin.allow_lesser = false
+
+    # Synchronize slider and spinbox
+    slider.value_changed.connect(func(new_value: float):
+        spin.value = new_value
+        if is_int:
+            value_changed.emit(int(new_value))
+        else:
+            value_changed.emit(new_value)
+    )
+
+    spin.value_changed.connect(func(new_value: float):
+        slider.value = new_value
+        if is_int:
+            value_changed.emit(int(new_value))
+        else:
+            value_changed.emit(new_value)
+    )
+
+    _set_value_method = func(value):
+        slider.value = value
+        spin.value = value
+
+    container.add_child(slider)
+    container.add_child(spin)
+
+    _control = container
+    add_child(_control)
+
+
+## Special setup for flags values.
+func setup_flags(display_name: String, current_value: int, flag_names: Array[String], read_only: bool) -> void:
+    _setup_common(display_name, read_only)
+
+    var container: VBoxContainer = VBoxContainer.new()
+    container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+    var checkboxes: Array[CheckBox] = []
+
+    for i in range(flag_names.size()):
+        var checkbox: CheckBox = CheckBox.new()
+        checkbox.text = flag_names[i]
+        checkbox.button_pressed = bool(current_value & (1 << i))
+
+        if not read_only:
+            checkbox.toggled.connect(func(_pressed: bool):
+                var new_value: int = 0
+                for j in range(checkboxes.size()):
+                    if checkboxes[j].button_pressed:
+                        new_value |= (1 << j)
+                value_changed.emit(new_value)
+            )
+
+        if read_only:
+            checkbox.disabled = true
+
+        container.add_child(checkbox)
+        checkboxes.append(checkbox)
+
+    _set_value_method = func(value: int):
+        for j in range(checkboxes.size()):
+            checkboxes[j].button_pressed = bool(value & (1 << j))
+
+    _control = container
+    add_child(_control)
+
+
+
+func _setup_common(display_name: String, read_only: bool) -> void:
+    _label.text = display_name
+    _read_only = read_only
+
+    if _control:
+        _control.queue_free()
 
 
 func _create_control_for_type(value_type: int, default_value: Variant) -> Control:
