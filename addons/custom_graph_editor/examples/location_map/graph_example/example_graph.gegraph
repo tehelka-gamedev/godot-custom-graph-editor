@@ -43,24 +43,33 @@
 	},
 	"nodes": {
 		"0": {
+			"danger_level": 1,
+			"features": 3,
 			"id": 0,
 			"location_name": "Farm",
+			"location_type": 0,
 			"position": {
 				"x": -197.799987792969,
 				"y": 97.7999877929688
 			}
 		},
 		"1": {
+			"danger_level": 4,
+			"features": 4,
 			"id": 1,
 			"location_name": "River",
+			"location_type": 0,
 			"position": {
 				"x": 69.2000122070313,
 				"y": 136.799987792969
 			}
 		},
 		"2": {
+			"danger_level": 7,
+			"features": 4,
 			"id": 2,
 			"location_name": "Mountains",
+			"location_type": 2,
 			"position": {
 				"x": 34.2000122070313,
 				"y": -19.2000122070313

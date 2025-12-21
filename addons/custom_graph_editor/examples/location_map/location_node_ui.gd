@@ -5,12 +5,11 @@ extends CGEGraphNodeUI
 ##
 ## This demonstrates customizing the node appearance for location nodes.
 
-## Label to display the location name
-@onready var location_label: Label = %LocationLabel
-
 ## Background color for the node (earthy green tone for locations)
 @export var background_color: Color = Color(0.2, 0.5, 0.3, 0.9)
 
+## Label to display the location name
+@onready var location_label: Label = %LocationLabel
 
 func _ready() -> void:
     custom_minimum_size = Vector2(120, 60)
@@ -41,42 +40,54 @@ func _update_location_label() -> void:
         location_label.text = location_node.location_name
 
 
-## TODO
 func _setup_inspector(inspector: CGEInspectorPanel) -> void:
+    var location_node: LocationNode = graph_element as LocationNode
+
+    # Basic string property
     inspector.add_property(
         "Location name",
-        func(): return graph_element.location_name,
-        func(value) -> bool: 
+        func(): return location_node.location_name,
+        func(value: String) -> bool:
             if value.length() == 0:
                 return false
-            var location_node: LocationNode = graph_element as LocationNode
             location_node.location_name = value
-
+            _update_location_label()
             return true
     )
 
-    inspector.add_property(
-        "Read only property",
-        func(): return "ma_property_RO"
-    )
-
-    inspector.add_property(
-        "test bool",
-        func(): return true,
-        func(value) -> bool: 
+    # Enum property - demonstrates add_enum_property()
+    # Inspector shows strings, but we store as enum internally
+    var type_names: Array = LocationNode.Type.keys()
+    inspector.add_enum_property(
+        "Location type",
+        type_names,
+        func(): return type_names[location_node.location_type],
+        func(value: String) -> bool:
+            var index: int = type_names.find(value)
+            if index != -1:
+                location_node.location_type = index as LocationNode.Type
             return true
     )
 
-    inspector.add_property(
-        "test color",
-        func(): return Color.RED,
-        func(value) -> bool: 
-            return true
+    # Range property (int) - demonstrates add_range_property()
+    inspector.add_range_property(
+        "Danger level",
+        0.0,  # min
+        10.0,  # max
+        1.0,  # step
+        func(): return location_node.danger_level,
+        func(value: int) -> bool:
+            location_node.danger_level = value
+            return true,
+        true  # is_int
     )
 
-    inspector.add_property(
-        "test vector2",
-        func(): return Vector2.ZERO,
-        func(value) -> bool: 
+    # Flags property - demonstrates add_flags_property()
+    inspector.add_flags_property(
+        "Features",
+        ["Has Shop", "Has Inn", "Has Quest", "Has Blacksmith"],
+        func(): return location_node.features,
+        func(value: int) -> bool:
+            location_node.features = value
             return true
     )
