@@ -8,12 +8,13 @@ signal execute_command_requested(cmd: CGEInspectorCommand)
 
 
 # Reference to currently inspected UI element
-var _current_element: CGEGraphElementUI = null
+var _current_selection: Array[CGEGraphElementUI] = []
 
 # Mapping "property_name" -> CGEPropertyRow
 var _property_rows: Dictionary[String, CGEPropertyRow] = {}
 
 @onready var _properties_container: VBoxContainer = %PropertiesVBoxContainer
+@onready var _placeholder_label: Label = %PlaceholderLabel
 
 func _ready() -> void:
     _refresh_visibility()
@@ -90,15 +91,21 @@ func add_flags_property(property_name: String, flag_names: Array[String], getter
 ## Remove all properties from the inspector
 func clear() -> void:
     _clear_properties()
-    _current_element = null
+    _current_selection.clear()
 
 
 ## Refresh a given property displayed to a new value, only of the element id match (called mainly during undo/redo)
 func refresh_property(element_id: int, prop_name: String, value: Variant) -> void:
-    if _current_element == null:
+    if len(_current_selection) == 0:
+        return
+        
+    # no handling of multiple selection yet
+    if len(_current_selection) > 1:
         return
     
-    if _current_element.get_id() != element_id:
+
+    var current_element: CGEGraphNodeUI = _current_selection[0]
+    if current_element.get_id() != element_id:
         return
     
     var prop: CGEPropertyRow = _property_rows.get(prop_name)
@@ -111,12 +118,14 @@ func refresh_property(element_id: int, prop_name: String, value: Variant) -> voi
 
 
 # Called when an element is selected, update the properties to show and whether the inspector must be shown or not
-func _on_element_selected(element_ui: CGEGraphElementUI) -> void:
+func _on_selection_changed(new_selection: Array[CGEGraphElementUI]) -> void:
     _clear_properties()
-    _current_element = element_ui
 
-    if _current_element != null:
-        _current_element._setup_inspector(self)
+    _current_selection = new_selection
+
+    # no multiple selection yet
+    if len(_current_selection) == 1:
+        _current_selection[0]._setup_inspector(self)
     
     _refresh_visibility()
 
@@ -131,7 +140,11 @@ func _clear_properties() -> void:
 
 # Called when the value of a property is changed, notify via a signal it happened to request to actually update the data
 func _on_property_value_changed(new_value: Variant, property_name: String, getter: Callable, setter: Callable) -> void:
-    if _current_element == null:
+    if len(_current_selection) == 0:
+        return
+        
+    # no handling of multiple selection yet
+    if len(_current_selection) > 1:
         return
     
     var old_value: Variant = getter.call()
@@ -142,7 +155,7 @@ func _on_property_value_changed(new_value: Variant, property_name: String, gette
     var command: CGESetPropertyCommand = CGESetPropertyCommand.new(
         null, # set by editor
         self,
-        _current_element.get_id(),
+        _current_selection[0].get_id(),
         property_name,
         setter,
         old_value,
@@ -154,12 +167,19 @@ func _on_property_value_changed(new_value: Variant, property_name: String, gette
 
 # Refresh the inspector visibility depending on if there are properties to show or not
 func _refresh_visibility() -> void:
-    if _current_element == null:
+    if len(_current_selection) == 0:
         visible = false
         return
-    
-    if _property_rows.is_empty():
+
+    var has_single_selection: bool = len(_current_selection) == 1
+
+    if _property_rows.is_empty() and has_single_selection:
         visible = false
         return
+
+
+    # Show placeholder when no single selection or no properties
+    _placeholder_label.visible = not has_single_selection
+    _properties_container.visible = has_single_selection
 
     visible = true

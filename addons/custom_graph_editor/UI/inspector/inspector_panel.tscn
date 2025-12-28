@@ -25,6 +25,14 @@ layout_mode = 2
 text = "Inspector"
 horizontal_alignment = 1
 
+[node name="PlaceholderLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Edition of multiple selection not supported yet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PropertiesScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3

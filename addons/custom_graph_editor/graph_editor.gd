@@ -19,6 +19,8 @@ signal graph_element_selected(node:CGEGraphNodeUI)
 signal node_deselected(node)
 ## Emitted when a node is dragged to the graph.
 signal node_dragged(node, position)
+## Emitted when the selection changed
+signal selection_changed(new_selection: Array[CGEGraphElementUI])
 
 
 ### Enums
@@ -227,7 +229,7 @@ func _ready():
     _center_scrollbars()
 
     if _inspector_panel:
-        graph_element_selected.connect(_inspector_panel._on_element_selected)
+        selection_changed.connect(_inspector_panel._on_selection_changed)
         _inspector_panel.execute_command_requested.connect(_on_inspector_command_requested)
 
 
@@ -363,6 +365,7 @@ func select_graph_element(node:CGEGraphElementUI):
         node.set_selected(true)
         _on_graph_element_selected(node)
         graph_element_selected.emit(node)
+        selection_changed.emit(_selection)
 
 
 ## Deselect the given graph element (node or link) in the editor. Does nothing if the element is not selected.
@@ -374,6 +377,7 @@ func deselect_graph_element(node:CGEGraphElementUI):
     node.set_selected(false)
     _on_graph_element_deselected(node)
     node_deselected.emit(node)
+    selection_changed.emit(_selection)
 
 
 ## Clear the current selection. Calls [method _on_selection_cleared] that can be overridden in child classes for additional behavior.
@@ -384,6 +388,7 @@ func clear_selection():
         node_deselected.emit(node)
     _selection.clear()
     _on_selection_cleared()
+    selection_changed.emit(_selection)
 
 
 # Name not ideal considering the other one _on_node_created.
@@ -1068,6 +1073,7 @@ func _delete_selection() -> void:
     execute_command( CGERemoveSelectionCommand.new(self, nodes_id, links_id))
 
     _selection.clear()
+    selection_changed.emit(_selection)
 
 
 ## Copy the current selection to the given clipboard.
