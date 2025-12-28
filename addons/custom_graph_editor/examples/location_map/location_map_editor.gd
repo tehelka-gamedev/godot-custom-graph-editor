@@ -31,72 +31,112 @@ func clear_selection() -> void:
 
 
 var DEMO_GRAPH_BACKUP_WEB: Dictionary = {
-    "links": {
-        "3": {
-            "end_node_id": 1,
-            "id": 3,
-            "position": {
-                "x": -137.799987792969,
-                "y": 127.799987792969
-            },
-            "start_node_id": 0,
-            "travel_cost": 1
-        },
-        "4": {
-            "end_node_id": 2,
-            "id": 4,
-            "position": {
-                "x": -137.799987792969,
-                "y": 127.799987792969
-            },
-            "start_node_id": 0,
-            "travel_cost": 5
-        },
-        "5": {
-            "end_node_id": 1,
-            "id": 5,
-            "position": {
-                "x": 94.2000122070313,
-                "y": 10.7999877929688
-            },
-            "start_node_id": 2,
-            "travel_cost": 5
-        },
-        "6": {
-            "end_node_id": 0,
-            "id": 6,
-            "position": {
-                "x": 94.2000122070313,
-                "y": 10.7999877929688
-            },
-            "start_node_id": 2,
-            "travel_cost": 5
-        }
-    },
-    "nodes": {
-        "0": {
-            "id": 0,
-            "location_name": "Farm",
-            "position": {
-                "x": -197.799987792969,
-                "y": 97.7999877929688
-            }
-        },
-        "1": {
-            "id": 1,
-            "location_name": "River",
-            "position": {
-                "x": 69.2000122070313,
-                "y": 136.799987792969
-            }
-        },
-        "2": {
-            "id": 2,
-            "location_name": "Mountains",
-            "position": {
-                "x": 34.2000122070313,
-                "y": -19.2000122070313
-            }
-        }
-    }
+	"links": {
+		"3": {
+			"end_node_id": 1,
+			"id": 3,
+			"position": {
+				"x": -95.7999877929688,
+				"y": 139.799987792969
+			},
+			"start_node_id": 0,
+			"travel_cost": 1
+		},
+		"4": {
+			"end_node_id": 2,
+			"id": 4,
+			"position": {
+				"x": -95.7999877929688,
+				"y": 139.799987792969
+			},
+			"start_node_id": 0,
+			"travel_cost": 5
+		},
+		"5": {
+			"end_node_id": 1,
+			"id": 5,
+			"position": {
+				"x": 156.200012207031,
+				"y": -11.2000122070313
+			},
+			"start_node_id": 2,
+			"travel_cost": 5
+		},
+		"6": {
+			"end_node_id": 0,
+			"id": 6,
+			"position": {
+				"x": 156.200012207031,
+				"y": -11.2000122070313
+			},
+			"start_node_id": 2,
+			"travel_cost": 5
+		},
+		"11": {
+			"end_node_id": 7,
+			"id": 11,
+			"position": {
+				"x": 188.200012207031,
+				"y": 122.799987792969
+			},
+			"start_node_id": 1,
+			"travel_cost": 1
+		},
+		"12": {
+			"end_node_id": 1,
+			"id": 12,
+			"position": {
+				"x": 156.200012207031,
+				"y": 261.799987792969
+			},
+			"start_node_id": 7,
+			"travel_cost": 1
+		}
+	},
+	"nodes": {
+		"0": {
+			"danger_level": 1,
+			"features": 1,
+			"id": 0,
+			"location_name": "Farm",
+			"location_type": 1,
+			"position": {
+				"x": -173.799987792969,
+				"y": 109.799987792969
+			}
+		},
+		"1": {
+			"danger_level": 1,
+			"features": 15,
+			"id": 1,
+			"location_name": "Great Town",
+			"location_type": 0,
+			"position": {
+				"x": 110.200012207031,
+				"y": 92.7999877929688
+			}
+		},
+		"2": {
+			"danger_level": 7,
+			"features": 4,
+			"id": 2,
+			"location_name": "Dragon's Lair",
+			"location_type": 2,
+			"position": {
+				"x": 78.2000122070313,
+				"y": -41.2000122070313
+			}
+		},
+		"7": {
+			"danger_level": 4,
+			"features": 4,
+			"id": 7,
+			"location_name": "Dark Forest",
+			"location_type": 3,
+			"position": {
+				"x": 78.2000122070313,
+				"y": 231.799987792969
+			}
+		}
+	}
 }

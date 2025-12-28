@@ -10,8 +10,6 @@ enum Type {
     TOWN,
     VILLAGE,
     DUNGEON,
-    CASTLE,
-    RUINS,
     FOREST
 }
 
@@ -22,6 +20,9 @@ enum Feature {
     QUEST = 1 << 2,
     BLACKSMITH = 1 << 3,
 }
+
+const DANGER_LEVEL_MIN: int = 0
+const DANGER_LEVEL_MAX: int = 10
 
 ## The name of this location
 var location_name: String = "Location"

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="village.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="18.203125"
+     inkscape:cx="-5.1639485"
+     inkscape:cy="18.485837"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <!-- Village - Small house with roof -->
+  <polygon
+     points="16,4 6,14 26,14 "
+     fill="#8b4513"
+     stroke="#5a2d0c"
+     stroke-width="1.06988"
+     id="polygon1"
+     transform="matrix(1.3302655,0,0,1.1595439,-4.5017362,-3.5729671)" />
+  <rect
+     x="8.8009195"
+     y="12.72011"
+     width="15.963186"
+     height="18.581863"
+     fill="#d2691e"
+     stroke="#8b4513"
+     stroke-width="1.32877"
+     id="rect1" />
+  <rect
+     x="14.324537"
+     y="24.017826"
+     width="3.1926374"
+     height="6.6363802"
+     fill="#654321"
+     id="rect3"
+     style="stroke-width:1" />
+  <rect
+     x="10.556433"
+     y="15.837979"
+     width="5.3210621"
+     height="5.309104"
+     fill="#ffe082"
+     id="rect4"
+     style="fill:#682f01;fill-opacity:1;stroke-width:1" />
+  <rect
+     x="11.073179"
+     y="16.327784"
+     width="4.3392439"
+     height="4.3552718"
+     fill="#ffe082"
+     id="rect5"
+     style="stroke-width:1" />
+  <rect
+     x="17.61002"
+     y="15.837979"
+     width="5.3210621"
+     height="5.309104"
+     fill="#ffe082"
+     id="rect6"
+     style="fill:#682f01;fill-opacity:1;stroke-width:1" />
+  <rect
+     x="18.126764"
+     y="16.327784"
+     width="4.3392439"
+     height="4.3552718"
+     fill="#ffe082"
+     id="rect7"
+     style="stroke-width:1" />
+</svg>

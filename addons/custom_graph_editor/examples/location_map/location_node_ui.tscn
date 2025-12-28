@@ -1,27 +1,48 @@
-[gd_scene load_steps=2 format=3 uid="uid://crq1g8y0jmlbn"]
+[gd_scene load_steps=5 format=3 uid="uid://crq1g8y0jmlbn"]
 
-[ext_resource type="Script" path="res://addons/custom_graph_editor/examples/location_map/location_node_ui.gd" id="1_location_node_ui"]
+[ext_resource type="Script" uid="uid://3jgakankdp73" path="res://addons/custom_graph_editor/examples/location_map/location_node_ui.gd" id="1_location_node_ui"]
+[ext_resource type="Texture2D" uid="uid://bd7umprh8cjyi" path="res://addons/custom_graph_editor/examples/location_map/icons/dungeon.svg" id="2_mxar3"]
+
+[sub_resource type="Gradient" id="Gradient_e1md3"]
+offsets = PackedFloat32Array(0, 0.36309522, 1)
+colors = PackedColorArray(0.48545206, 0.9315563, 0.3559687, 1, 0.7290246, 0.5065382, 0.19199708, 1, 0.77330655, 0.18571055, 0.29683012, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mxar3"]
+gradient = SubResource("Gradient_e1md3")
+height = 1
 
 [node name="LocationNodeUI" type="Control"]
 custom_minimum_size = Vector2(120, 60)
 layout_mode = 3
 anchors_preset = 0
+offset_right = 156.0
+offset_bottom = 60.0
+mouse_filter = 1
 script = ExtResource("1_location_node_ui")
+background_color = SubResource("GradientTexture2D_mxar3")
 
-[node name="LocationLabel" type="Label" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 155.0
+offset_bottom = 60.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="ContentContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TypeIcon" type="TextureRect" parent="MarginContainer/ContentContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = -11.5
-offset_right = 60.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_mxar3")
+stretch_mode = 5
+
+[node name="LocationLabel" type="Label" parent="MarginContainer/ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Location"
 horizontal_alignment = 1
 vertical_alignment = 1
