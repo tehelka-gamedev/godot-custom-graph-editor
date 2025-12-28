@@ -70,7 +70,7 @@ To create a custom graph editor tailored to your project, you will need to exten
     - `CGEGraphLinkUI`: The base UI class for graph links. Extend this class to customize the appearance of your links.
 
     - You can see the [minimal example project](addons/custom_graph_editor/examples/minimal/) to understand how to extend these classes and create a custom graph editor.
-    - For more advanced customisation, see the [location map example](addons/custom_graph_editor/examples/location_map/) to see how to add meta data to nodes, links and an inspector to edit these data.
+    - For more advanced customisation, see the [location map example](addons/custom_graph_editor/examples/location_map/) to see how to add meta data to nodes, links and properties to the inspector to edit these data..
     - A tutorial might be provided in future versions.
 
 ## Documentation
@@ -80,7 +80,6 @@ For now, the only code documentation available is the code comments. You can sea
 ## Known Limitations
 
 This add-on is currently in development and in beta stage. Some known limitations include:
-- No visual inspector for nodes and links to edit their properties. This has to be implemented manually in custom classes for now, but **will be provided in future versions**. See a custom implementation in the [location map example](addons/custom_graph_editor/examples/location_map/).
 - No support for multi-edges (linking two nodes more than once)
 - Multiple type of nodes is not really handled by the add-on, it is only possible to have one node type. The same applies to links. It is considered for future versions.
 - No snapping/grid support
