@@ -109,7 +109,7 @@ func refresh_property(element_id: int, prop_name: String, value: Variant) -> voi
         return
     
 
-    var current_element: CGEGraphNodeUI = _current_selection[0]
+    var current_element: CGEGraphElementUI = _current_selection[0]
     if current_element.get_id() != element_id:
         return
     

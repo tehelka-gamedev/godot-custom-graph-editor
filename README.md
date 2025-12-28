@@ -2,7 +2,7 @@
 
 
 [![MIT License](https://img.shields.io/github/license/tehelka-gamedev/godot-custom-graph-editor)](https://github.com/tehelka-gamedev/godot-custom-graph-editor/blob/develop/LICENSE)
-![Version](https://img.shields.io/badge/version-0.6.0--beta-red)
+![Version](https://img.shields.io/badge/version-0.6.1--beta-red)
 ![Godot 4.5+](https://img.shields.io/badge/Godot-4.5%2B-blue.svg)
 [![Itch.io web test](https://img.shields.io/badge/Test%20demo%20on%20itch.io-FA5C5C?style=flat-square&logo=itchdotio&logoColor=white)](https://tehelka.itch.io/godot-custom-graph-editor)
 
