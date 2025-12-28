@@ -89,7 +89,6 @@ func _setup_inspector(inspector: CGEInspectorPanel) -> void:
     # Enum property - demonstrates add_enum_property()
     # Inspector shows strings, but we store as enum internally
     var type_names: Array = LocationNode.Type.keys()
-    print(type_names)
     inspector.add_enum_property(
         "Location type",
         type_names,
