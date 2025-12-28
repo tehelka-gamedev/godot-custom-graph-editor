@@ -1,8 +1,10 @@
 # Normalize line endings for all files that Git considers text files.
 * text=auto eol=lf
 
-# Only include the addons folder when downloading from the Asset Library. Ignore gut
-/**                                 export-ignore
-/addons                             !export-ignore
-/addons/custom_graph_editor/**             !export-ignore
-/addons/gut                         export-ignore
+# Only include addons/custom_graph_editor when exporting (for Asset Library)
+# Ignore everything at root level except addons/
+/* export-ignore
+
+# Ignore everything in addons/ except custom_graph_editor/
+/addons/* export-ignore
+!/addons/custom_graph_editor
