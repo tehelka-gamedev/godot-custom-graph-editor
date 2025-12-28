@@ -1,9 +1,9 @@
 @tool
 class_name CGEPropertyRow
 extends HBoxContainer
-## Represents a property row in the CGEInspector panel
+## A row in an inspector panel.
 ##
-## TODO
+## Represents a property row in the [CGEInspector] panel. It can have various forms (textbox, spinbox, checkbox, ...) depending on the property type.
 
 
 signal value_changed(new_value: Variant)

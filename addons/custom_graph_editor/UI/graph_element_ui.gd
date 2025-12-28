@@ -75,6 +75,6 @@ func deserialize(data: Dictionary) -> void:
 
 
 ## To be overriden
-## TODO
+## Allow adding properties to the inspector to see and edit.
 func _setup_inspector(inspector: CGEInspectorPanel) -> void:
     pass

@@ -49,7 +49,7 @@ func _position_cost_label() -> void:
         cost_label.position = midpoint - cost_label.size / 2
 
 
-## TODO
+# Add travelel cost to the inspector
 func _setup_inspector(inspector: CGEInspectorPanel) -> void:
     var travel_path: TravelPath = graph_element as TravelPath
     inspector.add_property(

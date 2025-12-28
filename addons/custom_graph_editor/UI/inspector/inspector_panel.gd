@@ -1,11 +1,15 @@
 @tool
 class_name CGEInspectorPanel
 extends PanelContainer
+## Inspector panel control.
+##
+## This class implements an inspector panel with editable properties.
+
 
 signal execute_command_requested(cmd: CGEInspectorCommand)
 
-@export var  property_row_scene: PackedScene = preload("res://addons/custom_graph_editor/UI/inspector/property_row.tscn")
-
+## Scene used to display a property
+@export var property_row_scene: PackedScene = preload("res://addons/custom_graph_editor/UI/inspector/property_row.tscn")
 
 # Reference to currently inspected UI element
 var _current_selection: Array[CGEGraphElementUI] = []
@@ -15,6 +19,7 @@ var _property_rows: Dictionary[String, CGEPropertyRow] = {}
 
 @onready var _properties_container: VBoxContainer = %PropertiesVBoxContainer
 @onready var _placeholder_label: Label = %PlaceholderLabel
+
 
 func _ready() -> void:
     _refresh_visibility()
@@ -56,7 +61,7 @@ func add_enum_property(property_name: String, enum_values: Array, getter: Callab
     prop_row.value_changed.connect(_on_property_value_changed.bind(property_name, getter, setter))
 
 
-## Add an range property. If no setter is given, the field will be a int/float read-only property.
+## Add a range property. If no setter is given, the field will be a int/float read-only property.
 func add_range_property(property_name: String, min_value: float, max_value: float, step: float, getter: Callable, setter: Callable = Callable(), is_int: bool = false) -> void:
     if not setter.is_valid():
         # Read-only: just use regular property (will display as int/float)
