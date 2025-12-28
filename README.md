@@ -20,10 +20,13 @@
 
 ## Features
 - An **extensible directed graph editor** with custom node and link types and a customisable toolbar
-- Basic graph editing operations: add/remove nodes and links, history management (undo/redo), 
+- Basic graph editing operations: add/remove nodes and links, history management (undo/redo)
 - Separation of data model and visual representation for easy customization
 - Graph data export/import to file
 - Load graph data only, for runtime
+- **Built-in inspector panel** for editing node and link properties with undo/redo support
+  - Auto-detected property types: string, int, float, bool, color, vectors
+  - Specialized controls: enum dropdowns, range sliders, flag checkboxes
 
 
 ## Installation
@@ -69,9 +72,62 @@ To create a custom graph editor tailored to your project, you will need to exten
     - `CGEGraphLink`: The base logic class for graph links. Extend this class to create custom link types with specific properties. Its visual representation is handled by `CGEGraphLinkUI`.
     - `CGEGraphLinkUI`: The base UI class for graph links. Extend this class to customize the appearance of your links.
 
-    - You can see the [minimal example project](addons/custom_graph_editor/examples/minimal/) to understand how to extend these classes and create a custom graph editor.
-    - For more advanced customisation, see the [location map example](addons/custom_graph_editor/examples/location_map/) to see how to add meta data to nodes, links and properties to the inspector to edit these data..
-    - A tutorial might be provided in future versions.
+### Using the Inspector
+
+To add editable properties to your custom nodes or links, override the `_setup_inspector(inspector: CGEInspectorPanel)` method in your UI class:
+
+```gdscript
+func _setup_inspector(inspector: CGEInspectorPanel) -> void:
+    var my_node: MyCustomNode = graph_element as MyCustomNode
+
+    # Basic property (auto-detected type)
+    inspector.add_property(
+        "Node Name",
+        func(): return my_node.node_name,
+        func(value: String) -> bool:
+            my_node.node_name = value
+            return true
+    )
+
+    # Enum property (dropdown)
+    inspector.add_enum_property(
+        "Type",
+        ["Type A", "Type B", "Type C"],
+        func(): return my_node.node_type,
+        func(value: String) -> bool:
+            my_node.node_type = value
+            return true
+    )
+
+    # Range property (slider + spinbox)
+    inspector.add_range_property(
+        "Priority",
+        0.0, 100.0, 1.0,  # min, max, step
+        func(): return my_node.priority,
+        func(value: int) -> bool:
+            my_node.priority = value
+            return true,
+        true  # is_int
+    )
+
+    # Flags property (checkboxes for bitfields)
+    inspector.add_flags_property(
+        "Options",
+        ["Option A", "Option B", "Option C"],
+        func(): return my_node.flags,
+        func(value: int) -> bool:
+            my_node.flags = value
+            return true
+    )
+```
+
+All property changes are automatically undoable/redoable. Omit the setter parameter to make a property read-only.
+
+### Examples
+
+- You can see the [minimal example project](addons/custom_graph_editor/examples/minimal/) to understand how to extend these classes and create a custom graph editor.
+- For more advanced customisation, see the [location map example](addons/custom_graph_editor/examples/location_map/) which demonstrates custom nodes with properties, icons, and dynamic feedback.
+- A tutorial might be provided in future versions.
 
 ## Documentation
   

@@ -12,10 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `CGEInspectorPanel` - Automatically displays and edits properties of selected elements
   - `CGEPropertyRow` - Individual property row with type-based controls
   - Users implement `_setup_inspector(inspector)` in custom UI classes (nodes and links) to define properties
-    - The type is automatically detected and adequate UI controls are generated
-    - Available property types: string, int, float, bool, color, Vector2, Vector3
+    - Basic property types with auto-detected controls: string, int, float, bool, color, Vector2, Vector3
+    - Specialized property methods for enhanced UI controls:
+      - `add_enum_property()` - dropdown for selecting from predefined values
+      - `add_range_property()` - horizontal slider + SpinBox combo for constrained numeric ranges
+      - `add_flags_property()` - multiple checkboxes for bitfield/flag values
     - Properties can be read-only by not providing a setter
     - **Full undo/redo support**
+    - Multiple selection placeholder message (multi-edit support planned for future)
 - Inspector command system for undoable property changes
   - `CGEInspectorCommand` - Abstract base class for inspector-related commands
   - `CGESetPropertyCommand` - Command for property changes with validation and undo/redo support
