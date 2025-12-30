@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0-beta] - 2025-12-29
+
 ### Added
 - Built-in inspector panel for editing node and link properties
   - `CGEInspectorPanel` - Automatically displays and edits properties of selected elements
@@ -49,5 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Serialization/deserialization
 - Location map example
 
-[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.5.0-beta...HEAD
+[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.0-beta...HEAD
+[0.6.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.5.0-beta...v0.6.0-beta
 [0.5.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/releases/tag/v0.5.0-beta
