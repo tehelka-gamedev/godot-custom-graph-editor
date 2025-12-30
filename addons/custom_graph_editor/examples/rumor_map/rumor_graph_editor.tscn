@@ -1,0 +1,13 @@
+[gd_scene load_steps=6 format=3 uid="uid://c7x8d0vqw4mem"]
+
+[ext_resource type="PackedScene" uid="uid://ca3bvai5fvsfx" path="res://addons/custom_graph_editor/graph_editor.tscn" id="1_base_editor"]
+[ext_resource type="Script" uid="uid://r5tli5n6qe6k" path="res://addons/custom_graph_editor/examples/rumor_map/rumor_node.gd" id="2_rumor_node"]
+[ext_resource type="PackedScene" uid="uid://bqv8y2m3xhc8p" path="res://addons/custom_graph_editor/examples/rumor_map/rumor_node_ui.tscn" id="3_rumor_node_ui"]
+[ext_resource type="Script" uid="uid://drg4h5helk4wo" path="res://addons/custom_graph_editor/examples/rumor_map/rumor_link.gd" id="4_5edjp"]
+[ext_resource type="PackedScene" path="res://addons/custom_graph_editor/examples/rumor_map/rumor_link_ui.tscn" id="5_rumor_link_ui"]
+
+[node name="RumorGraphEditor" instance=ExtResource("1_base_editor")]
+graph_node_ui_scene = ExtResource("3_rumor_node_ui")
+graph_link_ui_scene = ExtResource("5_rumor_link_ui")
+node_class = ExtResource("2_rumor_node")
+link_class = ExtResource("4_5edjp")

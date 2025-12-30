@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmqr7vx8yw2ob"]
+
+[ext_resource type="Script" uid="uid://c4fu1etlv6b6p" path="res://addons/custom_graph_editor/examples/rumor_map/rumor_link_ui.gd" id="1_rumor_link_ui"]
+[ext_resource type="Texture2D" uid="uid://bh6h1wt124yom" path="res://addons/custom_graph_editor/images/arrow_right-white.svg" id="2_ngc3n"]
+
+[node name="RumorLinkUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_rumor_link_ui")
+arrow_texture = ExtResource("2_ngc3n")
