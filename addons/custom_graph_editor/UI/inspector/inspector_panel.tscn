@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://r4ytkg6fps04" path="res://addons/custom_graph_editor/UI/inspector/inspector_panel.gd" id="1_76oop"]
 
 [node name="InspectorPanel" type="PanelContainer"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,7 +30,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-text = "Edition of multiple selection not supported yet"
+text = "Editing of multiple elements type is not supported."
 horizontal_alignment = 1
 vertical_alignment = 1
 

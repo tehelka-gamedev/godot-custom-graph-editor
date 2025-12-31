@@ -10,11 +10,11 @@ extends Control
 ### Signals
 
 ## Emitted when a connection is made between two nodes.
-signal connection_made(from, to, line) 
+signal connection_made(from, to, line)
 ## Emitted when a connection is removed between two nodes.
 signal connection_removed(from, to, line)
 ## Emitted when a node is selected.
-signal graph_element_selected(node:CGEGraphNodeUI)
+signal graph_element_selected(node: CGEGraphNodeUI)
 ## Emitted when a node is deselected.
 signal node_deselected(node)
 ## Emitted when a node is dragged to the graph.
@@ -38,7 +38,7 @@ enum CGEState {
 ## Minimum distance needed to consider a drag-box and not just a clic
 const MIN_DRAG_DISTANCE = 10.0
 ## Pixels to offset parallel links
-const OFFSET_DISTANCE = 15.0  
+const OFFSET_DISTANCE = 15.0
 
 
 ### Exports
@@ -71,7 +71,7 @@ var graph: CGEGraph = CGEGraph.new()
 ## Current file path of the graph being edited. Empty if not saved yet.
 var current_file_path: String = ""
 ## Whether the current file has unsaved changes. Notifies the _toolbar when changed.
-var file_is_modified: bool = false :
+var file_is_modified: bool = false:
     set(value):
         if value != file_is_modified:
             file_is_modified = value
@@ -165,7 +165,7 @@ static func deserialize_graph_runtime(path: String, node_script: GDScript, link_
 
     var json: JSON = JSON.new()
     var json_string: String = file.get_as_text()
-    var parse_result: = json.parse(json_string)
+    var parse_result := json.parse(json_string)
 
     if not parse_result == OK:
         push_error("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
@@ -185,7 +185,7 @@ static func deserialize_graph_runtime(path: String, node_script: GDScript, link_
 
 
 func _init():
-    focus_mode = Control.FOCUS_ALL	
+    focus_mode = Control.FOCUS_ALL
 
     # Enforce mouse filter to ignore
     _nodes.name = "nodes"
@@ -195,7 +195,6 @@ func _init():
 
 
 func _ready():
-
     graph.node_class = node_class
     graph.link_class = link_class
     # Connect scroll bars to the graph
@@ -247,8 +246,6 @@ func _draw() -> void:
         draw_rect(box_rect, Color(0.3, 0.5, 0.8, 0.2))
         # Draw solid border
         draw_rect(box_rect, Color(0.3, 0.5, 0.8, 0.8), false, 2.0)
-
-
 
 
 ######## PUBLIC METHODS ########
@@ -352,7 +349,7 @@ func get_graph_element_under_mouse() -> CGEGraphElementUI:
 
 
 ## Select the given graph element (node or link) in the editor. Does nothing if the element is already selected.
-func select_graph_element(node:CGEGraphElementUI):
+func select_graph_element(node: CGEGraphElementUI):
     if node in _selection:
         return
     else:
@@ -369,7 +366,7 @@ func select_graph_element(node:CGEGraphElementUI):
 
 
 ## Deselect the given graph element (node or link) in the editor. Does nothing if the element is not selected.
-func deselect_graph_element(node:CGEGraphElementUI):
+func deselect_graph_element(node: CGEGraphElementUI):
     if node not in _selection:
         return
 
@@ -401,7 +398,6 @@ func node_created(node_id: int, new_node: CGEGraphNodeUI) -> void:
 func execute_command(cmd: CGECommand) -> void:
     if cmd.execute():
         _command_history.push(cmd)
-
 
 
 ## Undo the last executed command.
@@ -513,7 +509,7 @@ func load_from_file(path: String) -> void:
 
     var json: JSON = JSON.new()
     var json_string: String = file.get_as_text()
-    var parse_result: = json.parse(json_string)
+    var parse_result := json.parse(json_string)
 
 
     if not parse_result == OK:
@@ -619,8 +615,8 @@ func _gui_input(event: InputEvent) -> void:
 ## Called when the "Select All" action is triggered. Selects all nodes and connections in the graph. If all are already selected, deselects all instead.
 func _on_select_all() -> void:
     # If all selected, deselect all
-    var nb_selected:int = len(_selection)
-    var total_graph_element:int = _nodes.get_child_count() + _connections.get_child_count()
+    var nb_selected: int = len(_selection)
+    var total_graph_element: int = _nodes.get_child_count() + _connections.get_child_count()
 
     if nb_selected == total_graph_element:
         clear_selection()
@@ -909,7 +905,7 @@ func _handle_mouse_motion(event: InputEventMouseMotion):
                     selected_node.moved.emit() # TODO fix this, not pretty
             elif is_drag_box_selecting():
                 _drag_box_end = get_mouse_screen_coordinates()
-                queue_redraw()  # Redraw to show the selection box
+                queue_redraw() # Redraw to show the selection box
         
         MOUSE_BUTTON_RIGHT:
             if is_connecting():
@@ -930,24 +926,24 @@ func _update_scrollbar_pages() -> void:
 ## Center the scrollbars so the view starts at origin (0, 0).
 func _center_scrollbars() -> void:
     if _h_scroll_bar:
-        _h_scroll_bar.value = -_h_scroll_bar.page / 2.0
+        _h_scroll_bar.value = - _h_scroll_bar.page / 2.0
     if _v_scroll_bar:
-        _v_scroll_bar.value = -_v_scroll_bar.page / 2.0
+        _v_scroll_bar.value = - _v_scroll_bar.page / 2.0
 
 
 ## Called when the horizontal scroll bar value changes.
 func _on_h_scroll_changed(value: float) -> void:
     # This is not ideal since we need to think about changing both variables. Maybe change this
-    _content.position.x = -value
-    _grid.offset.x = -value
+    _content.position.x = - value
+    _grid.offset.x = - value
     pass
 
 
 ## Called when the vertical scroll bar value changes.
 func _on_v_scroll_changed(value: float) -> void:
     # This is not ideal since we need to think about changing both variables. Maybe change this
-    _content.position.y = -value
-    _grid.offset.y = -value
+    _content.position.y = - value
+    _grid.offset.y = - value
     pass
 
 
@@ -975,7 +971,7 @@ func _on_node_created(node_id: int) -> void:
 func _on_node_deleted(node_id: int) -> void:
     _selection.erase(_nodes_ref[node_id])
     _nodes_ref[node_id].queue_free()
-    _nodes_ref.erase(node_id)  # Remove from dictionary to avoid freed object references
+    _nodes_ref.erase(node_id) # Remove from dictionary to avoid freed object references
 
 
 ## Called when a new link is created in the graph.
@@ -1038,7 +1034,7 @@ func _update_parallel_link_offsets(node_a_id: int, node_b_id: int) -> void:
     # Assign offsets if both links exist
     if link_a_to_b != null and link_b_to_a != null:
         # Two parallel links: offset in opposite directions
-        link_a_to_b.parallel_link_offset = -OFFSET_DISTANCE
+        link_a_to_b.parallel_link_offset = - OFFSET_DISTANCE
         link_b_to_a.parallel_link_offset = OFFSET_DISTANCE
     else:
         # Only one link: no offset needed
@@ -1070,7 +1066,7 @@ func _delete_selection() -> void:
             links_id.push_back(elem.get_id())
 
 
-    execute_command( CGERemoveSelectionCommand.new(self, nodes_id, links_id))
+    execute_command(CGERemoveSelectionCommand.new(self, nodes_id, links_id))
 
     _selection.clear()
     selection_changed.emit(_selection)
@@ -1193,7 +1189,7 @@ func _update_modified_state() -> void:
 ###### INSPECTOR SPECIFIC METHODS
 
 ## Called when the inspector requests a command. Executes it (and fill the graph_editor info first)
-func _on_inspector_command_requested(cmd: CGEInspectorCommand) -> void:
+func _on_inspector_command_requested(cmd: CGECommand) -> void:
     cmd._graph_editor = self
     cmd._graph = graph
 

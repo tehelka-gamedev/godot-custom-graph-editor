@@ -41,7 +41,7 @@ func set_value(value: Variant) -> void:
 
 ## Special setup for enum values.
 func setup_enum(display_name: String, current_value: Variant, enum_values: Array) -> void:
-    const read_only: bool = false   # enums cannot be readonly, they are displayed as string instead is the user did not set a setter
+    const read_only: bool = false # enums cannot be readonly, they are displayed as string instead is the user did not set a setter
     _setup_common(display_name, read_only)
 
     var option_button: OptionButton = OptionButton.new()
@@ -70,7 +70,7 @@ func setup_enum(display_name: String, current_value: Variant, enum_values: Array
 
 ## Special setup for range values, composed of a slider + a spinbox to set a value
 func setup_range(display_name: String, current_value: float, min_value: float, max_value: float, step: float, is_int: bool) -> void:
-    const  read_only: bool = false # range cannot be readonly, it is just a normal property int/float, if the user did not set a setter
+    const read_only: bool = false # range cannot be readonly, it is just a normal property int/float, if the user did not set a setter
     _setup_common(display_name, read_only)
 
     var container: HBoxContainer = HBoxContainer.new()
@@ -97,26 +97,31 @@ func setup_range(display_name: String, current_value: float, min_value: float, m
     spin.allow_greater = false
     spin.allow_lesser = false
 
-    # Synchronize slider and spinbox
+    # Emit the row value in the right type
+    var emit_value: Callable = func():
+        value_changed.emit(int(spin.value) if is_int else spin.value)
+
+    # While dragging the slider, only mirror the value into the spinbox display.
+    # Just commit the value when drag ended to not have command to set property during sliding
+    # or if the value did not change.
+    # This has the downside of having no preview during sliding, but I may fix that one day.
     slider.value_changed.connect(func(new_value: float):
-        spin.value = new_value
-        if is_int:
-            value_changed.emit(int(new_value))
-        else:
-            value_changed.emit(new_value)
+        spin.set_value_no_signal(new_value)
+    )
+    slider.drag_ended.connect(func(value_has_changed: bool):
+        if value_has_changed:
+            emit_value.call()
     )
 
+    # The spinbox already emits only on enter /  arrow click.
     spin.value_changed.connect(func(new_value: float):
-        slider.value = new_value
-        if is_int:
-            value_changed.emit(int(new_value))
-        else:
-            value_changed.emit(new_value)
+        slider.set_value_no_signal(new_value)
+        emit_value.call()
     )
 
     _set_value_method = func(value):
-        slider.value = value
-        spin.value = value
+        slider.set_value_no_signal(value)
+        spin.set_value_no_signal(value)
 
     container.add_child(slider)
     container.add_child(spin)
@@ -160,7 +165,6 @@ func setup_flags(display_name: String, current_value: int, flag_names: Array[Str
 
     _control = container
     add_child(_control)
-
 
 
 func _setup_common(display_name: String, read_only: bool) -> void:

@@ -7,7 +7,7 @@ extends Control
 ## Classes inherinting CGEGraphElement will need to override _draw() method
 
 ## Reference to the graph element this UI represents. See [CGEGraphElement]
-var graph_element: CGEGraphElement = null : set = set_graph_element
+var graph_element: CGEGraphElement = null: set = set_graph_element
 ## Whether this element is selected in the graph editor or not. Allows to change visual aspect when selected if needed.[br]
 ## See [method set_selected] and [method is_selected].
 var selected: bool = false
@@ -20,7 +20,7 @@ func _init():
 
 
 ## Set whether this element is selected or not.
-func set_selected(value:bool) -> void:
+func set_selected(value: bool) -> void:
     if selected != value:
         selected = value
         queue_redraw()
@@ -43,7 +43,7 @@ func set_graph_element(elem: CGEGraphElement) -> void:
 ## Override this method in subclasses to update UI elements (labels, colors, etc) based on the graph element's data.
 ## This is called both when the element is initially set and after deserialization.
 func _update_ui_from_data() -> void:
-    pass  # Override in subclasses
+    pass # Override in subclasses
 
 
 ## Get the ID of the graph element this UI represents. This is a shortcut for [code]graph_element.id[/code].
@@ -66,7 +66,7 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary) -> void:
     graph_element.deserialize(data)
     if data.has("position"):
-        var pos = data["position"] 
+        var pos = data["position"]
         position = Vector2(float(pos["x"]), float(pos["y"]))
 
 
@@ -76,5 +76,8 @@ func deserialize(data: Dictionary) -> void:
 
 ## To be overriden
 ## Allow adding properties to the inspector to see and edit.
+## May be called once per selected element during multi-selection.
+## Implementations must only call inspector.add_*.
+## Do not assume they are called exactly once ^^'
 func _setup_inspector(inspector: CGEInspectorPanel) -> void:
     pass
