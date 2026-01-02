@@ -10,7 +10,7 @@ extends RefCounted
 var id: int = -1
 
 
-func _init(elem_id: int) -> void:
+func _init(elem_id: int = -1) -> void:
     id = elem_id
 
 

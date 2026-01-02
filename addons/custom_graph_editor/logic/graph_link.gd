@@ -11,7 +11,7 @@ var start_node_id: int = -1
 var end_node_id: int = -1
 
 
-func _init(link_id:int, start_id: int = -1, end_id: int = -1):
+func _init(link_id:int = -1, start_id: int = -1, end_id: int = -1):
     super(link_id)
     start_node_id = start_id
     end_node_id = end_id
