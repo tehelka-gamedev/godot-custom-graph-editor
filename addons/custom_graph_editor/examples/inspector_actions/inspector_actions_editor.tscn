@@ -1,0 +1,11 @@
+[gd_scene load_steps=5 format=3 uid="uid://binspactedscn"]
+
+[ext_resource type="PackedScene" uid="uid://ca3bvai5fvsfx" path="res://addons/custom_graph_editor/graph_editor.tscn" id="1_base_editor"]
+[ext_resource type="Script" uid="uid://dkdiwaky35syi" path="res://addons/custom_graph_editor/examples/inspector_actions/inspector_actions_editor.gd" id="2_editor"]
+[ext_resource type="Script" uid="uid://dxytddmsh6osx" path="res://addons/custom_graph_editor/examples/inspector_actions/condition_node.gd" id="3_node"]
+[ext_resource type="PackedScene" uid="uid://binspactcnscn" path="res://addons/custom_graph_editor/examples/inspector_actions/condition_node_ui.tscn" id="4_node_ui"]
+
+[node name="InspectorActionsEditor" instance=ExtResource("1_base_editor")]
+script = ExtResource("2_editor")
+graph_node_ui_scene = ExtResource("4_node_ui")
+node_class = ExtResource("3_node")
