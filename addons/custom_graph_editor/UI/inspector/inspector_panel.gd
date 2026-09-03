@@ -20,6 +20,10 @@ var _property_rows: Dictionary[String, CGEPropertyRow] = {}
 # Specs of properties to create the correct rows
 var _property_specs: Dictionary[String, PropertySpec] = {}
 
+# Ids of custom controls added by the user (action buttons for instance)
+# key (id) ->  bool (unused value) to act like a set
+var _custom_controls_id: Dictionary[String, bool] = {}
+
 
 @onready var _properties_container: VBoxContainer = %PropertiesVBoxContainer
 @onready var _placeholder_label: Label = %PlaceholderLabel
@@ -142,6 +146,64 @@ func add_flags_property(property_name: String, flag_names: Array[String], getter
         prop_row.value_changed.connect(_on_property_value_changed.bind(property_name))
 
 
+## Add a custom control to the inspector.
+## id is a unique id to reference the control, and label is an optional text label that will be displayed alongside (on the left) of the control node.
+## Note: the control is destroyed when the inspector is closed, so it should be rebuilt everytime when calling this method.
+func add_custom_control(id: String, control: Control, label: String = "") -> void:
+    if _custom_controls_id.has(id):
+        # can happen with multi selection, so we just queue_free excess elements created
+        # this pattern should be changed I guess, but it's ok for now...
+        control.queue_free()
+        return
+    _custom_controls_id[id] = true
+
+    var row: Control = null
+    if label.is_empty():
+        row = control
+    else:
+        row = HBoxContainer.new()
+        var l: Label = Label.new()
+        l.text = label
+        control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        row.add_child(l)
+        row.add_child(control)
+    _properties_container.add_child(row)
+
+
+## Helper to add an action button to the inspector
+## [br] on_pressed is a Callable that takes the current selection: Array[CGEGraphElementUI] as input
+## [br] Note: The selection is a snapshot of when the inspector opened so beware of iterating over it if you keep the reference in another window for instance.
+## [br]
+## options is an optional dict with more settings
+## - "label": String, "tooltip": String, "disabled": bool
+## If you have a lot of settings to define, maybe it's better to use [add_custom_control]
+func add_action_button(id: String, text: String, on_pressed: Callable, options: Dictionary = {}) -> void:
+    if _custom_controls_id.has(id):
+        return # skip if already built
+    
+    var button: Button = Button.new()
+    button.text = text
+    if options.has("tooltip"):
+        button.tooltip_text = options["tooltip"]
+    button.disabled = options.get("disabled", false)
+    var selection_snapshot: Array[CGEGraphElementUI] = _current_selection.duplicate()
+    button.pressed.connect(func() -> void:
+        on_pressed.call(selection_snapshot)
+    )
+    add_custom_control(id, button, options.get("label", ""))
+
+
+## Used to submit command with custom action buttons
+## Maybe should be outside of inspector panel and more general graph API ?
+func submit_command(cmd: CGECommand) -> void:
+    execute_command_requested.emit(cmd)
+
+
+## A duplicate of the elements currently being inspected.
+func get_selection() -> Array[CGEGraphElementUI]:
+    return _current_selection.duplicate()
+
+
 ## Remove all properties from the inspector
 func clear() -> void:
     _clear_properties()
@@ -187,6 +249,7 @@ func _clear_properties() -> void:
         c.queue_free()
     _property_rows.clear()
     _property_specs.clear()
+    _custom_controls_id.clear()
     _refresh_visibility()
 
 
@@ -240,7 +303,9 @@ func _refresh_visibility() -> void:
 
     var has_same_type: bool = _all_same_type(_current_selection)
 
-    if _property_rows.is_empty() and has_same_type:
+    var is_empty: bool = _property_rows.is_empty() and _custom_controls_id.is_empty()
+
+    if is_empty and has_same_type:
         visible = false
         return
 
