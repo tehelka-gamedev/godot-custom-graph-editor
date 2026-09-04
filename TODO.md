@@ -3,7 +3,7 @@
 ## Known Issues / Future Enhancements
 
 ### High Priority
-- [ ] Multi-selection editing in inspector (currently shows placeholder message)
+- [x] Multi-selection editing in inspector (applies to same-type selections; mixed types still show a placeholder)
 
 ### Medium Priority
 - [ ] More documentation (video/text tutorials?, step-by-step guides)

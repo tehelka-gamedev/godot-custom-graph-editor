@@ -6,7 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Fix _init having non-optional parameters in `CGEGraphElement` and `CGEGraphLink` to fix potential export problems.
+
+### Added
+- Multi-selection editing in the inspector panel
+  - Editing a property now applies the change to every selected element of the same type as a single undo step (via `CGECompositeCommand`)
+  - Selecting different node types disable the inspector
+- `CGECompositeCommand` groups several commands into one atomically undoable command, rolling back children already processed if one fails
+
+### Changed
+- **BREAKING**: `_setup_inspector()` may now be called once per selected element instead of exactly once
+  - Implementations must only call `inspector.add_*` methods and must not assume a single invocation or do one-time side effects
+- The inspector `execute_command_requested` signal and `CGEGraphEditor._on_inspector_command_requested()` now take a `CGECommand` (previously `CGEInspectorCommand`), so the inspector can emit composite commands
+    - Migration: if you connected a handler to `execute_command_requested`, widen its parameter type to `CGECommand`
+- Range properties in the inspector no longer emit while the slider is being dragged; the value is committed once on drag end (no live preview during the drag however)
+
+### Fixed
+- Error spam from `CustomLineEdit`: its context menu is now trimmed each time it opens instead of once at `_ready()`, which no longer matches how Godot rebuilds the menu
+- `_init` having non-optional parameters in `CGEGraphElement` and `CGEGraphLink`, to fix potential export problems
 
 
 ## [0.6.1-beta] - 2025-12-30

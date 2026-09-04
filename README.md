@@ -27,6 +27,7 @@
 - **Built-in inspector panel** for editing node and link properties with undo/redo support
   - Auto-detected property types: string, int, float, bool, color, vectors
   - Specialized controls: enum dropdowns, range sliders, flag checkboxes
+  - Multi-selection editing for elements of the same type
 
 
 ## Installation
