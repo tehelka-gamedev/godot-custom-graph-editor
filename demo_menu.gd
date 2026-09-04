@@ -5,20 +5,22 @@ extends Control
 ## graph editor examples. Press ESC in any example to return here.
 
 
-
 var _current_editor_showed: Control = null
 
 @onready var _demo_selector_container: Container = %DemoSelectorContainer
 @onready var _minimal_example_button: Button = %MinimalButton
 @onready var _location_map_example_button: Button = %LocationMapButton
+@onready var _inspector_action_example_button: Button = %InspectorActionButton
 @onready var _demo_mode_panel: Container = %DemoModeESCPanel
 @onready var _minimal_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/minimal/minimal_graph_editor.tscn")
 @onready var _location_map_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/location_map/location_map_editor.tscn")
+@onready var _inspector_action_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/inspector_actions/inspector_actions_editor.tscn")
 
 
 func _ready() -> void:
     _minimal_example_button.pressed.connect(_on_minimal_button_pressed)
     _location_map_example_button.pressed.connect(_on_location_map_button_pressed)
+    _inspector_action_example_button.pressed.connect(_on_inspector_action_button_pressed)
     _demo_mode_panel.visible = false
 
 
@@ -40,6 +42,10 @@ func _on_minimal_button_pressed() -> void:
 
 func _on_location_map_button_pressed() -> void:
     demo_editor(_location_map_graph_editor_scene)
+
+
+func _on_inspector_action_button_pressed() -> void:
+    demo_editor(_inspector_action_graph_editor_scene)
 
 
 # Show

@@ -54,10 +54,6 @@ theme_override_font_sizes/font_size = 16
 text = "Select an example to explore:"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
 [node name="ButtonsContainer" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -94,6 +90,21 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "An advanced example showing a location/travel map editor with extended nodes and links"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="InspectorActionButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Inspector Actions Example"
+
+[node name="InspectorActionDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "An example showing how to add custom controls and action buttons in inspector"
 horizontal_alignment = 1
 autowrap_mode = 2
 
