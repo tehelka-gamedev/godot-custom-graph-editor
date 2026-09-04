@@ -28,6 +28,7 @@
   - Auto-detected property types: string, int, float, bool, color, vectors
   - Specialized controls: enum dropdowns, range sliders, flag checkboxes
   - Multi-selection editing for elements of the same type
+  - Custom action buttons and controls
 
 
 ## Installation
@@ -128,6 +129,7 @@ All property changes are automatically undoable/redoable. Omit the setter parame
 
 - You can see the [minimal example project](addons/custom_graph_editor/examples/minimal/) to understand how to extend these classes and create a custom graph editor.
 - For more advanced customisation, see the [location map example](addons/custom_graph_editor/examples/location_map/) which demonstrates custom nodes with properties, icons, and dynamic feedback.
+- See the [inspector actions example](addons/custom_graph_editor/examples/inspector_actions/) for action buttons and custom controls in the inspector.
 - A tutorial might be provided in future versions.
 
 ## Documentation

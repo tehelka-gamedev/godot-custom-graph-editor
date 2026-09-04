@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Editing a property now applies the change to every selected element of the same type as a single undo step (via `CGECompositeCommand`)
   - Selecting different node types disable the inspector
 - `CGECompositeCommand` groups several commands into one atomically undoable command, rolling back children already processed if one fails
+- `_setup_inspector()` can add custom controls: `add_action_button()` and `add_custom_control()`
+  - `inspector.submit_command()` / `inspector.get_selection()` help building actions
+  - A new example in `examples/inspector_actions/` showcase this new stuff
 
 ### Changed
 - **BREAKING**: `_setup_inspector()` may now be called once per selected element instead of exactly once
