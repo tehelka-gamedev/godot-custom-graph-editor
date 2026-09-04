@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0-beta] - 2026-09-05
+
 ### Added
 - Multi-selection editing in the inspector panel
   - Editing a property now applies the change to every selected element of the same type as a single undo step (via `CGECompositeCommand`)
@@ -75,7 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Serialization/deserialization
 - Location map example
 
-[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.1-beta...HEAD
+[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.7.0-beta...HEAD
+[0.7.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.1-beta...v0.7.0-beta
 [0.6.1-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.0-beta...v0.6.1-beta
 [0.6.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.5.0-beta...v0.6.0-beta
 [0.5.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/releases/tag/v0.5.0-beta
