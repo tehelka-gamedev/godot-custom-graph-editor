@@ -24,12 +24,6 @@ func _draw():
     # Do nothing special if not selected.
 
 
-## Serialize the node UI state to a dictionary. See [method CGEGraphElement.serialize].
-func serialize() -> Dictionary:
-    var data: Dictionary = super()
-    return data
-
-
 ## Set the minimum size of the node UI.
 func _get_minimum_size():
     return Vector2(50, 50)

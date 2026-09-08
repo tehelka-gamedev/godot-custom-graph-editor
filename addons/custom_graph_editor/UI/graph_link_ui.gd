@@ -77,17 +77,6 @@ func _draw() -> void:
     _draw_arrow()
 
 
-## Serialize the link UI into a Dictionary. See [method CGEGraphElementUI.serialize].
-func serialize() -> Dictionary:
-    var data: Dictionary = super()
-    return data
-
-
-## Deserialize the link UI from a Dictionary. See [method CGEGraphElementUI.deserialize].
-func deserialize(data: Dictionary) -> void:
-    super(data)
-
-
 ## Link/attach this link between two nodes
 func link_to(from_node: CGEGraphNodeUI, to_node: CGEGraphNodeUI) -> void:
     # TODO: check if they are the same and allow it or not ?
