@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Deleted
+- `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateSelectionCommand`.
+
 ## [0.7.0-beta] - 2026-09-05
 
 ### Added
