@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Renamed `CGETranslateSelectionCommand` to `CGETranslateCommand` (`translate_command.gd`), as it does not relate necessarily to selection.
+
 ### Deleted
-- `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateSelectionCommand`.
+- `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateCommand` (old `CGETranslateSelectionCommand`)
 
 ## [0.7.0-beta] - 2026-09-05
 

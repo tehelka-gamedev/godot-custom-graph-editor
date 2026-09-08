@@ -1,4 +1,4 @@
-class_name CGETranslateSelectionCommand
+class_name CGETranslateCommand
 extends CGECommand
 ## Command to translate (move) the selected nodes by an offset. 
 ##

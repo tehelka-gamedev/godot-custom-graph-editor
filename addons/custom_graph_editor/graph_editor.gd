@@ -671,7 +671,7 @@ func _validate_dragging() -> void:
     # manually add the command for undo, the dragging have already been made via editor
     # Not ideal, might fix it later.
     if not is_zero_approx(mouse_delta.length_squared()):
-        var translate_selection_cmd := CGETranslateSelectionCommand.new(self, nodes_id, mouse_delta)
+        var translate_selection_cmd := CGETranslateCommand.new(self, nodes_id, mouse_delta)
         translate_selection_cmd._cache_selection()
         _command_history.push(
             translate_selection_cmd
