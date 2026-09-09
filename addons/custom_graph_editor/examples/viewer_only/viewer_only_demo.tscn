@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://addons/custom_graph_editor/examples/viewer_only/viewer_only_demo.gd" id="1_vod001"]
+[ext_resource type="PackedScene" path="res://addons/custom_graph_editor/graph_viewer.tscn" id="2_vod001"]
+
+[node name="ViewerOnlyDemo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vod001")
+
+[node name="Viewer" parent="." instance=ExtResource("2_vod001")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HintLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -32.0
+offset_right = 400.0
+offset_bottom = -8.0
+grow_vertical = 0
+mouse_filter = 2
+text = "Read-only viewer: scroll to zoom, middle-drag to pan"

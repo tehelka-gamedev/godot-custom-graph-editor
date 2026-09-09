@@ -11,16 +11,19 @@ var _current_editor_showed: Control = null
 @onready var _minimal_example_button: Button = %MinimalButton
 @onready var _location_map_example_button: Button = %LocationMapButton
 @onready var _inspector_action_example_button: Button = %InspectorActionButton
+@onready var _viewer_only_example_button: Button = %ViewerOnlyButton
 @onready var _demo_mode_panel: Container = %DemoModeESCPanel
 @onready var _minimal_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/minimal/minimal_graph_editor.tscn")
 @onready var _location_map_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/location_map/location_map_editor.tscn")
 @onready var _inspector_action_graph_editor_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/inspector_actions/inspector_actions_editor.tscn")
+@onready var _viewer_only_demo_scene: PackedScene = preload("res://addons/custom_graph_editor/examples/viewer_only/viewer_only_demo.tscn")
 
 
 func _ready() -> void:
     _minimal_example_button.pressed.connect(_on_minimal_button_pressed)
     _location_map_example_button.pressed.connect(_on_location_map_button_pressed)
     _inspector_action_example_button.pressed.connect(_on_inspector_action_button_pressed)
+    _viewer_only_example_button.pressed.connect(_on_viewer_only_button_pressed)
     _demo_mode_panel.visible = false
 
 
@@ -48,15 +51,19 @@ func _on_inspector_action_button_pressed() -> void:
     demo_editor(_inspector_action_graph_editor_scene)
 
 
+func _on_viewer_only_button_pressed() -> void:
+    demo_editor(_viewer_only_demo_scene)
+
+
 # Show
 func demo_editor(scene: PackedScene) -> void:
     if _current_editor_showed != null:
         _current_editor_showed.queue_free()
-    
+
     _demo_selector_container.visible = false
     _demo_mode_panel.visible = true
 
-    var editor: CGEGraphEditor = scene.instantiate()
+    var editor: Control = scene.instantiate()
     _current_editor_showed = editor
     add_child(_current_editor_showed)
     _demo_mode_panel.move_to_front()

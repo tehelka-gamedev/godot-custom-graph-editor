@@ -108,6 +108,21 @@ text = "An example showing how to add custom controls and action buttons in insp
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="ViewerOnlyButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Viewer Only Example"
+
+[node name="ViewerOnlyDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "A standalone CGEGraphViewer with a hardcoded graph, no editor: read-only pan/zoom navigation"
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="Footer" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10
