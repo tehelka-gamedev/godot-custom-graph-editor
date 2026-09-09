@@ -49,6 +49,54 @@ const OFFSET_DISTANCE = 15.0
 ## Min zoom amount
 @export var min_zoom: float = 0.5
 
+## Whether the background grid is drawn. Grid appearance (colors, spacing) is configured on the
+## [code]%Grid[/code] child node.
+@export var show_grid: bool = true:
+    set(value):
+        show_grid = value
+        if _grid:
+            _grid.visible = value
+
+## Whether the horizontal/vertical scrollbars are shown. Middle-drag panning still works when hidden.
+@export var show_scrollbars: bool = true:
+    set(value):
+        show_scrollbars = value
+        if _h_scroll_bar:
+            _h_scroll_bar.visible = value
+        if _v_scroll_bar:
+            _v_scroll_bar.visible = value
+
+## Whether middle-drag panning is allowed. Pan via code ([method fit_to_view]) is unaffected.
+@export var pan_enabled: bool = true
+
+## Whether mouse-wheel zoom and middle-double-click zoom-reset are allowed.
+## Zoom via code ([method set_zoom] / [method fit_to_view]) is unaffected.
+@export var zoom_enabled: bool = true
+
+@export_category("Background")
+## Solid fill painted behind the grid. Transparent by default (no fill).
+@export var background_color: Color = Color(0, 0, 0, 0):
+    set(value):
+        background_color = value
+        if _background:
+            _background.color = value
+
+## Optional texture painted behind the grid (in front of [member background_color]).
+## Fixed in screen space.
+@export var background_texture: Texture2D:
+    set(value):
+        background_texture = value
+        if _background_texture:
+            _background_texture.texture = value
+            _background_texture.visible = value != null
+
+## How [member background_texture] fills the viewport.
+@export var background_texture_stretch: TextureRect.StretchMode = TextureRect.STRETCH_TILE:
+    set(value):
+        background_texture_stretch = value
+        if _background_texture:
+            _background_texture.stretch_mode = value
+
 
 ### Regular variables
 
@@ -65,6 +113,10 @@ var _connections: CGEConnectionContainer = CGEConnectionContainer.new()
 ## Mapping of link IDs to their UI representation.
 var _links_ref: Dictionary[int, CGEGraphLinkUI] = {}
 
+# Solid color fill behind the grid
+@onready var _background: ColorRect = %Background
+# Optional texture behind the grid
+@onready var _background_texture: TextureRect = %BackgroundTexture
 # Grid drawn in the background
 @onready var _grid: CGEGrid = %Grid
 # Content container holding nodes and connections
@@ -120,6 +172,8 @@ func _init():
 
 
 func _ready():
+    _apply_view_settings()
+
     if _h_scroll_bar:
         _h_scroll_bar.value_changed.connect(_on_h_scroll_changed)
     if _v_scroll_bar:
@@ -176,28 +230,40 @@ func _unbind_current_graph() -> void:
     _links_ref.clear()
 
 
+## Applies every display/interaction export to its child node. Called once from [method _ready] so
+## values set in the inspector or scene before the [code]@onready[/code] nodes resolve take effect.
+func _apply_view_settings() -> void:
+    _grid.visible = show_grid
+    _h_scroll_bar.visible = show_scrollbars
+    _v_scroll_bar.visible = show_scrollbars
+    _background.color = background_color
+    _background_texture.texture = background_texture
+    _background_texture.visible = background_texture != null
+    _background_texture.stretch_mode = background_texture_stretch
+
+
 ## Manage pan (middle-drag) and zoom (wheel / middle-double-click) input. Everything else bubbles
 ## unhandled to whichever Control embeds this viewer (e.g. [CGEGraphEditor]).
 func _gui_input(event: InputEvent) -> void:
     if event is InputEventMouseButton:
         match event.button_index:
             MOUSE_BUTTON_WHEEL_UP:
-                if has_focus():
+                if zoom_enabled and has_focus():
                     _zoom_in(zoom_step)
                     accept_event()
 
             MOUSE_BUTTON_WHEEL_DOWN:
-                if has_focus():
+                if zoom_enabled and has_focus():
                     _zoom_out(zoom_step)
                     accept_event()
 
             MOUSE_BUTTON_MIDDLE:
-                if event.double_click:
+                if event.double_click and zoom_enabled:
                     reset_zoom()
                     accept_event()
 
     elif event is InputEventMouseMotion:
-        if event.button_mask == MOUSE_BUTTON_MASK_MIDDLE:
+        if pan_enabled and event.button_mask == MOUSE_BUTTON_MASK_MIDDLE:
             _h_scroll_bar.value -= event.relative.x
             _v_scroll_bar.value -= event.relative.y
             queue_redraw()

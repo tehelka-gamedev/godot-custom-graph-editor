@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `CGEGraphViewer.fit_to_view(margin)`: adjusts pan/zoom so every current node UI is framed.
   - `CGEGraphViewer.add_to_content(control)`: adds a `Control` into the same pan/zoom space the
     graph's own nodes and links live in, for decorations/overlays.
+  -  Exports for customizing the graph viewer: `show_grid`,
+    `show_scrollbars`, `pan_enabled`, `zoom_enabled`, `background_color`, `background_texture`,
+    `background_texture_stretch`.
 - `examples/viewer_only/`: a minimal standalone `CGEGraphViewer` demo (no editor graph preview).
 - `examples/pretty_viewer/`: a fancier standalone `CGEGraphViewer` demo with animations and moving object following node paths.
 
