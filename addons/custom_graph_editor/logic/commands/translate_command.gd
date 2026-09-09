@@ -26,7 +26,6 @@ func execute() -> bool:
             push_error("Trying to move a node with id '%d' but it does not exist. Something is wrong" % [id])
             return false
         node.global_position += _offset
-        node.moved.emit()
     return true
 
 
@@ -38,6 +37,5 @@ func undo() -> void:
             push_error("Trying to move a node with id '%d' but it does not exist. Something is wrong" % [id])
             return
         node.global_position -= _offset
-        node.moved.emit()
 
     _restore_selection()

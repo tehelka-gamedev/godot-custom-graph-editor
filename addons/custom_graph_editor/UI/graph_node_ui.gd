@@ -12,6 +12,20 @@ signal moved
 func _init():
     focus_mode = Control.FOCUS_NONE
     mouse_filter = Control.MOUSE_FILTER_PASS
+    # Needed to receive NOTIFICATION_LOCAL_TRANSFORM_CHANGED below.
+    set_notify_local_transform(true)
+
+
+## Emit [signal moved] whenever this node's local transform changes, however it was
+## changed, so linked [CGEGraphLinkUI]  always stay in sync without every caller
+## having to remember to emit it themselves.
+## [br][br]
+## Uses NOTIFICATION_LOCAL_TRANSFORM_CHANGED instead of  NOTIFICATION_TRANSFORM_CHANGED because
+## for an unclear reason, Godot seems to update lazily Controls global transform, and
+## NOTIFICATION_LOCAL_TRANSFORM_CHANGED appears to be more reliable.
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_LOCAL_TRANSFORM_CHANGED:
+        moved.emit()
 
 
 ## Override this to change the way the node is drawn when selected or not. By default, draws a border when selected.
@@ -31,4 +45,4 @@ func _get_minimum_size():
 
 ## Get the center position of the node UI in local space.
 func get_center() -> Vector2:
-    return position + size/2
+    return position + size / 2

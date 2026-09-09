@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Removed**: `zoom`/`zoom_step`/`max_zoom`/`min_zoom` exports moved to the new `CGEGraphViewer`, so edit the `%Viewer` node instead.
   - **Removed**: dead `connection_made`, `connection_removed`, `node_dragged` signals on `CGEGraphEditor` (it was never emitted).
 
+### Fixed
+- `CGEGraphNodeUI` now emits `moved` automatically on any transform change (with
+  `NOTIFICATION_LOCAL_TRANSFORM_CHANGED`), to fix bugs and avoid future bugs (when the signal emit was omitted).
+
 ### Deleted
 - `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateCommand` (old `CGETranslateSelectionCommand`)
 

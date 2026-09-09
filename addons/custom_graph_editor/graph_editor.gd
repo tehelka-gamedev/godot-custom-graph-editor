@@ -707,7 +707,6 @@ func _handle_mouse_motion(event: InputEventMouseMotion):
                     if selected_node is CGEGraphLinkUI:
                         continue
                     selected_node.position = _drag_nodes_start_positions[i] + mouse_delta
-                    selected_node.moved.emit() # TODO fix this, not pretty
             elif is_drag_box_selecting():
                 _drag_box_end = _viewer.get_mouse_screen_coordinates()
                 queue_redraw() # Redraw to show the selection box
