@@ -130,6 +130,15 @@ func test_create_link():
     assert_true(graph.are_connected(node_a.id, node_b.id), "Nodes should be connected after linking")
 
 
+## get_all_link_ids should list every created link's id
+func test_get_all_link_ids():
+    var node_a: CGEGraphNode = graph.create_node()
+    var node_b: CGEGraphNode = graph.create_node()
+    var link: CGEGraphLink = graph.create_link(node_a.id, node_b.id)
+
+    assert_eq(graph.get_all_link_ids(), [link.id])
+
+
 ## Try to create a link to/from a node that does not exist
 func test_create_link_missing_node_fails():
     var node_a: CGEGraphNode = graph.create_node()

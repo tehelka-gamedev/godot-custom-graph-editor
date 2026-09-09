@@ -58,6 +58,11 @@ func get_all_node_ids() -> Array[int]:
     return _nodes.keys()
 
 
+## Returns a list of all link IDs in the graph.
+func get_all_link_ids() -> Array[int]:
+    return _links.keys()
+
+
 ## Create a new node in the graph. If node_id is -1 (default), a new unique ID will be generated.
 ## If the node_id is already taken, returns null with an error. Otherwise, returns the created CGEGraphNode.
 func create_node(node_id: int = -1) -> CGEGraphNode:
