@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `CGEGraph.get_all_link_ids()`, mirroring `get_all_node_ids()`.
 - A new `CGEGraphViewer` (`graph_viewer.gd`/`graph_viewer.tscn`) node, to have only the graph view accessible at runtime if needed.
+  - `CGEGraphViewer.fit_to_view(margin)`: adjusts pan/zoom so every current node UI is framed.
+  - `CGEGraphViewer.add_to_content(control)`: adds a `Control` into the same pan/zoom space the
+    graph's own nodes and links live in, for decorations/overlays.
 
 ### Changed
 - Renamed `CGETranslateSelectionCommand` to `CGETranslateCommand` (`translate_command.gd`), as it does not relate necessarily to selection.

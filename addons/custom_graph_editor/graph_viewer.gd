@@ -235,6 +235,36 @@ func screen_rect_to_world_rect(rect: Rect2) -> Rect2:
     )
 
 
+## Adjusts pan and zoom so every current node UI is inside in the viewport, with [param margin]
+## pixels at each side. 
+## You might want to call it after an [code]await get_tree().process_frame[/code] right after
+## [method load_graph] if you call it from [code]_ready()[/code]).
+func fit_to_view(margin: float = 40.0) -> void:
+    var node_uis: Array[CGEGraphNodeUI] = get_all_node_uis()
+    if node_uis.is_empty() or size.x <= 0.0 or size.y <= 0.0:
+        return
+
+    var bounds: Rect2 = Rect2(node_uis[0].position, node_uis[0].size)
+    for node_ui in node_uis:
+        bounds = bounds.merge(Rect2(node_ui.position, node_ui.size))
+    bounds = bounds.grow(margin)
+
+    if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
+        return
+
+    set_zoom(min(size.x / bounds.size.x, size.y / bounds.size.y))
+
+    var bounds_center: Vector2 = bounds.position + bounds.size / 2.0
+    _h_scroll_bar.value = bounds_center.x * zoom - size.x / 2.0
+    _v_scroll_bar.value = bounds_center.y * zoom - size.y / 2.0
+
+
+## Adds [param control] as a child of the viewer's content layer (the same space nodes and links
+## live in), so it pans and zooms together with the graph.
+func add_to_content(control: Control) -> void:
+    _content.add_child(control)
+
+
 ## Set the zoom level of the viewer.
 func set_zoom(value: float) -> void:
     var previous_zoom = zoom
