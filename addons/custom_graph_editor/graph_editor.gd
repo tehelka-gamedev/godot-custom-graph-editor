@@ -5,20 +5,16 @@ extends Control
 ##
 ## This class implements a custom graph editor with nodes and links. This is the main entry point
 ## for making your own graph-based tools in Godot using this addon.[br]
+##
+## Graph visualisation is handled with [CGEGraphViewer] (see [member _viewer]). This class adds all the "editor" part (selection, undo/redo, clipboard, toolbar/inspector, file serialization, ...)
 
 
 ### Signals
 
-## Emitted when a connection is made between two nodes.
-signal connection_made(from, to, line)
-## Emitted when a connection is removed between two nodes.
-signal connection_removed(from, to, line)
 ## Emitted when a node is selected.
 signal graph_element_selected(node: CGEGraphNodeUI)
 ## Emitted when a node is deselected.
 signal node_deselected(node)
-## Emitted when a node is dragged to the graph.
-signal node_dragged(node, position)
 ## Emitted when the selection changed
 signal selection_changed(new_selection: Array[CGEGraphElementUI])
 
@@ -37,8 +33,6 @@ enum CGEState {
 
 ## Minimum distance needed to consider a drag-box and not just a clic
 const MIN_DRAG_DISTANCE = 10.0
-## Pixels to offset parallel links
-const OFFSET_DISTANCE = 15.0
 
 
 ### Exports
@@ -53,20 +47,12 @@ const OFFSET_DISTANCE = 15.0
 ## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink
 @export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
 
-@export_category("Graph Editor Settings")
-## Current zoom amount
-@export var zoom: float = 1.0
-## Zoom increase/decrease value
-@export var zoom_step: float = 0.2
-## Max zoom amount
-@export var max_zoom: float = 2.0
-## Min zoom amount
-@export var min_zoom: float = 0.5
-
 ### Regular variables
 
-## [CGEGraph] graph logic instance. Holds the graph data.
-var graph: CGEGraph = CGEGraph.new()
+## [CGEGraph] graph logic instance. Holds the graph data. Delegates to the embedded [CGEGraphViewer].
+var graph: CGEGraph:
+    get: return _viewer.graph
+    set(value): _viewer.graph = value
 
 ## Current file path of the graph being edited. Empty if not saved yet.
 var current_file_path: String = ""
@@ -76,16 +62,6 @@ var file_is_modified: bool = false:
         if value != file_is_modified:
             file_is_modified = value
             _toolbar.set_file_modified(value)
-
-## Graph nodes container
-var _nodes = Control.new()
-## Mapping of node IDs to their UI representation.
-var _nodes_ref: Dictionary[int, CGEGraphNodeUI] = {}
-
-## Graph connections container. See [CGEConnectionContainer].
-var _connections: CGEConnectionContainer = CGEConnectionContainer.new()
-## Mapping of link IDs to their UI representation.
-var _links_ref: Dictionary[int, CGEGraphLinkUI] = {}
 
 ## Keep the collection of selected nodes
 var _selection: Array[CGEGraphElementUI] = []
@@ -108,7 +84,7 @@ var _drag_box_start: Vector2 = Vector2.ZERO
 ## Drag box selection end IN SCREEN SPACE
 var _drag_box_end: Vector2 = Vector2.ZERO
 
-    
+
 ## Clipboard for copy/paste operations (see [CGEClipboard])
 var _editor_clipboard: CGEClipboard = CGEClipboard.new()
 
@@ -137,13 +113,8 @@ func _on_selection_cleared() -> void:
         _inspector_panel.clear()
 
 
-# Grid drawn in the background
-@onready var _grid: CGEGrid = %Grid
-# Content container holding nodes and connections
-@onready var _content: Control = %Content
-# References to scroll bars
-@onready var _h_scroll_bar: HScrollBar = %HScrollBar
-@onready var _v_scroll_bar: VScrollBar = %VScrollBar
+# Embedded viewer (pan/zoom, node/link UI). See [CGEGraphViewer].
+@onready var _viewer: CGEGraphViewer = %Viewer
 # Toolbar reference (see [CGEToolBar])
 @onready var _toolbar: CGEToolBar = %CGEToolBar
 # Inspector panel reference (see [CGEInspectorPanel])
@@ -157,75 +128,28 @@ func _on_selection_cleared() -> void:
 ## [param node_script]: GDScript class for nodes (must inherit from CGEGraphNode)[br]
 ## [param link_script]: GDScript class for links (must inherit from CGEGraphLink)[br]
 static func deserialize_graph_runtime(path: String, node_script: GDScript, link_script: GDScript) -> CGEGraph:
-    if not FileAccess.file_exists(path):
-        push_error("Tried to deserialize a graph from '%s' but it does not exist!" % path)
-        return null
-
-    var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-
-    var json: JSON = JSON.new()
-    var json_string: String = file.get_as_text()
-    var parse_result := json.parse(json_string)
-
-    if not parse_result == OK:
-        push_error("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
-        return null
-
-    var data: Dictionary = json.data as Dictionary
-
-    file.close()
-
-    var graph: CGEGraph = CGEGraph.new()
-    graph.node_class = node_script
-    graph.link_class = link_script
-
-    graph.deserialize(data)
-
-    return graph
-
-
-func _init():
-    focus_mode = Control.FOCUS_ALL
-
-    # Enforce mouse filter to ignore
-    _nodes.name = "nodes"
-    _nodes.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    _connections.name = "connectionsHolder"
-    _connections.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    return CGEGraphViewer.deserialize_graph_runtime(path, node_script, link_script)
 
 
 func _ready():
+    # Forward parameters to the viewer
+    _viewer.graph_node_ui_scene = graph_node_ui_scene
+    _viewer.graph_link_ui_scene = graph_link_ui_scene
+    _viewer.node_class = node_class
+    _viewer.link_class = link_class
+
     graph.node_class = node_class
     graph.link_class = link_class
-    # Connect scroll bars to the graph
-    if _h_scroll_bar:
-        _h_scroll_bar.value_changed.connect(_on_h_scroll_changed)
-    if _v_scroll_bar:
-        _v_scroll_bar.value_changed.connect(_on_v_scroll_changed)
+    _viewer.load_graph(graph)
 
-    _content.add_child(_nodes)
-    _content.add_child(_connections)
-    queue_redraw()
-
-    # Configure the connection container to use the same link UI scene as the editor
-    _connections.link_ui_scene = graph_link_ui_scene
-    _connections.request_link.connect(_on_new_link_requested)
-
-    graph.node_created.connect(_on_node_created)
-    graph.node_deleted.connect(_on_node_deleted)
-    graph.link_created.connect(_on_link_created)
-    graph.link_deleted.connect(_on_link_deleted)
+    _viewer.node_ui_created.connect(node_created)
+    _viewer.node_ui_removed.connect(func(node_id: int, node_ui: CGEGraphNodeUI): _selection.erase(node_ui))
+    _viewer.link_requested.connect(_on_new_link_requested)
 
     if _toolbar:
         _connect_toolbar_signals()
 
     _command_history.clear_all()
-
-    # Update scrollbar page size when viewport is resized
-    resized.connect(_update_scrollbar_pages)
-    # Set initial page size and center the view
-    _update_scrollbar_pages()
-    _center_scrollbars()
 
     if _inspector_panel:
         selection_changed.connect(_inspector_panel._on_selection_changed)
@@ -250,51 +174,6 @@ func _draw() -> void:
 
 ######## PUBLIC METHODS ########
 
-## Returns the mouse in the world coordinates.
-## Since we do not move a camera but instead move the _content to simulate a panning,
-## the mouse world position is actually computed from the _content node space.
-func get_mouse_world_coordinates() -> Vector2:
-    var mouse_screen_pos = get_global_mouse_position()
-    var content_origin = _content.global_position
-    return (mouse_screen_pos - content_origin) / zoom
-
-
-## Returns the mouse position in screen coordinates. See also [method get_mouse_world_coordinates].
-func get_mouse_screen_coordinates() -> Vector2:
-    return _content.get_global_mouse_position()
-
-
-## Returns the center of the screen in world coordinates. See also [method get_mouse_world_coordinates].
-func get_screen_center_coordinates() -> Vector2:
-    var screen_center_pos: Vector2 = global_position + size / 2
-    var content_origin: Vector2 = _content.global_position
-    return (screen_center_pos - content_origin) / zoom
-
-
-## Set the zoom level of the graph editor.
-func set_zoom(value: float) -> void:
-    var previous_zoom = zoom
-    var previous_mouse_pos = get_mouse_world_coordinates()
-    zoom = clamp(value, min_zoom, max_zoom)
-    if previous_zoom != zoom:
-        _grid.zoom = zoom
-        _content.scale = Vector2(zoom, zoom)
-
-        var offset: Vector2 = get_mouse_world_coordinates() - previous_mouse_pos
-
-        # Adjust _content position to keep the mouse position stable
-        # A bit clunky in the edge cases, but good enough for now
-        _h_scroll_bar.value -= offset.x * zoom
-        _v_scroll_bar.value -= offset.y * zoom
-
-        queue_redraw()
-
-
-## Reset the zoom level to 1.0
-func reset_zoom() -> void:
-    set_zoom(1.0)
-
-
 ## Returns whether the editor is currently in dragging state.
 func is_dragging() -> bool:
     return _state == CGEState.DRAGGING
@@ -308,44 +187,6 @@ func is_connecting() -> bool:
 ## Returns whether the editor is currently in drag-box selecting state.
 func is_drag_box_selecting() -> bool:
     return _state == CGEState.DRAG_BOX_SELECTING
-
-
-## Returns the node UI under the mouse, or null if none.
-func get_mouse_over_node() -> CanvasItem:
-    var children = _nodes.get_children()
-    # Iterate in reverse to check top-most nodes first (last child = highest z-order)
-    for i in range(children.size() - 1, -1, -1):
-        var node = children[i]
-        if not node is Control:
-            push_warning("Node %s is not a Control, is this normal?" % node.name)
-            continue
-        # use local position because we can pan the view
-        if node.get_rect().has_point(_nodes.get_local_mouse_position()):
-            return node
-    return null
-
-
-## Returns the connection UI under the mouse, or null if none.
-func get_mouse_over_connection() -> CanvasItem:
-    for connection in _connections.get_children():
-        if not connection is CGEGraphLinkUI:
-            push_error("Conection %s is not a CGEGraphLinkUI, something is wrong." % connection.name)
-            continue
-        var connection_link: CGEGraphLinkUI = connection
-        if connection_link.is_on_line(_connections.get_local_mouse_position()):
-            return connection_link
-    return null
-
-
-## Returns the graph element (node or link) UI under the mouse, or null if none.
-## Nodes have priority over links.
-func get_graph_element_under_mouse() -> CGEGraphElementUI:
-    var hit_node: CGEGraphElementUI = get_mouse_over_node()
-    # no node, try to get a connection
-    if hit_node == null:
-        hit_node = get_mouse_over_connection()
-    
-    return hit_node
 
 
 ## Select the given graph element (node or link) in the editor. Does nothing if the element is already selected.
@@ -414,21 +255,17 @@ func redo() -> void:
 
 ## Get the UI element for the given element ID, or null if not found.
 func get_graph_element(element_id: int) -> CGEGraphElementUI:
-    var node: CGEGraphNodeUI = get_graph_node(element_id)
-    if node:
-        return node
-    
-    return get_graph_link(element_id)
+    return _viewer.get_graph_element(element_id)
 
 
 ## Get the UI node for the given graph node ID, or null if not found.
 func get_graph_node(node_id: int) -> CGEGraphNodeUI:
-    return _nodes_ref.get(node_id)
+    return _viewer.get_graph_node(node_id)
 
 
 ## Get the UI link for the given graph link ID, or null if not found.
 func get_graph_link(link_id: int) -> CGEGraphLinkUI:
-    return _links_ref.get(link_id)
+    return _viewer.get_graph_link(link_id)
 
 
 ## Serialize the current graph to a Dictionary[String, Variant] for saving to file, in two sub-dictionaries: "nodes" and "links".[br]
@@ -437,12 +274,12 @@ func serialize() -> Dictionary[String, Variant]:
     var data: Dictionary[String, Variant] = {}
 
     var nodes_data: Dictionary = {}
-    for node_id in _nodes_ref.keys():
-        nodes_data[node_id] = _nodes_ref[node_id].serialize()
-    
+    for node_id in graph.get_all_node_ids():
+        nodes_data[node_id] = get_graph_node(node_id).serialize()
+
     var links_data: Dictionary = {}
-    for link_id in _links_ref.keys():
-        links_data[link_id] = _links_ref[link_id].serialize()
+    for link_id in graph.get_all_link_ids():
+        links_data[link_id] = get_graph_link(link_id).serialize()
 
     data["nodes"] = nodes_data
     data["links"] = links_data
@@ -481,7 +318,7 @@ func deserialize(data: Dictionary) -> void:
         graph.create_link(link_data.start_node_id, link_data.end_node_id, link_data.id)
         # Update the link UI with deserialized data
         get_graph_link(link_id).deserialize(links_data[link_id_str])
-    
+
     graph._sync_id_counter() # Should maybe call graph.deserialize first ?
 
 
@@ -504,7 +341,7 @@ func load_from_file(path: String) -> void:
     if not FileAccess.file_exists(path):
         push_error("Tried to load graph for '%s' but it does not exist!" % path)
         return
-    
+
     var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 
     var json: JSON = JSON.new()
@@ -534,7 +371,7 @@ func load_from_file(path: String) -> void:
 func _refresh_toolbar_undo_redo() -> void:
     if _toolbar == null:
         return
-    
+
     _toolbar.disable_undo(_command_history.is_empty())
     _toolbar.disable_redo(_command_history.can_redo() == false)
 
@@ -569,6 +406,7 @@ func _connect_toolbar_signals() -> void:
 
 ## Manage mouse and keyboard inputs. Shortcuts are handled by the [CGEToolBar] toolbar.
 ## Except select all, that will be moved later to the toolbar.
+## Pan and zoom are handled by the embedded [CGEGraphViewer] and never reach here.
 func _gui_input(event: InputEvent) -> void:
     if event is InputEventMouseButton:
         match event.button_index:
@@ -578,20 +416,6 @@ func _gui_input(event: InputEvent) -> void:
 
             MOUSE_BUTTON_RIGHT:
                 _handle_mouse_button_right(event)
-            
-            # Zoom in and out
-            MOUSE_BUTTON_WHEEL_UP:
-                if has_focus():
-                    _zoom_in(zoom_step)
-            
-            MOUSE_BUTTON_WHEEL_DOWN:
-                if has_focus():
-                    _zoom_out(zoom_step)
-
-            MOUSE_BUTTON_MIDDLE:
-                if event.double_click:
-                    reset_zoom()
-
 
     elif event is InputEventMouseMotion:
         _handle_mouse_motion(event)
@@ -616,27 +440,19 @@ func _gui_input(event: InputEvent) -> void:
 func _on_select_all() -> void:
     # If all selected, deselect all
     var nb_selected: int = len(_selection)
-    var total_graph_element: int = _nodes.get_child_count() + _connections.get_child_count()
+    var all_nodes: Array[CGEGraphNodeUI] = _viewer.get_all_node_uis()
+    var all_links: Array[CGEGraphLinkUI] = _viewer.get_all_link_uis()
+    var total_graph_element: int = all_nodes.size() + all_links.size()
 
     if nb_selected == total_graph_element:
         clear_selection()
         return
-    
-    for graph_node in _nodes.get_children():
+
+    for graph_node in all_nodes:
         select_graph_element(graph_node)
-    
-    for graph_link in _connections.get_children():
+
+    for graph_link in all_links:
         select_graph_element(graph_link)
-
-
-## On zoom in action
-func _zoom_in(amount: float) -> void:
-    set_zoom(zoom + amount)
-
-
-## On zoom out action
-func _zoom_out(amount: float) -> void:
-    set_zoom(zoom - amount)
 
 
 ## Start (move-)dragging the selected nodes.
@@ -661,8 +477,8 @@ func _validate_dragging() -> void:
     if _state != CGEState.DRAGGING:
         push_error("Cannot validate dragging, not in dragging state, something is wrong.")
         return
-    
-    var mouse_delta = (_drag_end_position - _drag_start_position) / zoom
+
+    var mouse_delta = (_drag_end_position - _drag_start_position) / _viewer.zoom
 
     var nodes_id: Array[int] = []
     for node in _selection:
@@ -736,27 +552,22 @@ func _validate_drag_box_selection(add_to_selection: bool) -> void:
 
     # Get selection rectangle in world coordinates
     var box_rect_screen = _get_drag_box_rect()
-    var box_rect_world = Rect2(
-        (box_rect_screen.position - _content.global_position) / zoom,
-        box_rect_screen.size / zoom
-    )
+    var box_rect_world = _viewer.screen_rect_to_world_rect(box_rect_screen)
 
     # Select all elements that intersect with the box
     if not add_to_selection:
         clear_selection()
 
     # Select nodes
-    for node in _nodes.get_children():
-        if node is CGEGraphNodeUI:
-            var node_rect = Rect2(node.position, node.size)
-            if box_rect_world.intersects(node_rect):
-                select_graph_element(node)
+    for node in _viewer.get_all_node_uis():
+        var node_rect = Rect2(node.position, node.size)
+        if box_rect_world.intersects(node_rect):
+            select_graph_element(node)
 
     # Select links
-    for link in _connections.get_children():
-        if link is CGEGraphLinkUI:
-            if link.intersects_rect(box_rect_world):
-                select_graph_element(link)
+    for link in _viewer.get_all_link_uis():
+        if link.intersects_rect(box_rect_world):
+            select_graph_element(link)
 
     _stop_drag_box_selection()
 
@@ -795,7 +606,7 @@ func _start_connecting(node: CGEGraphNodeUI) -> void:
         push_error("Already connecting, cannot start connecting again, something is wrong.")
         return
 
-    _connections.start_connecting(node, get_mouse_world_coordinates())
+    _viewer.start_connection_preview(node)
 
     _state = CGEState.CONNECTING
 
@@ -809,8 +620,8 @@ func _stop_connecting(node_under_mouse: CGEGraphNodeUI) -> void:
     if node_under_mouse == null:
         _cancel_connecting()
         return
-    
-    _connections.stop_connecting(node_under_mouse)
+
+    _viewer.stop_connection_preview(node_under_mouse)
 
     _state = CGEState.DEFAULT
 
@@ -821,7 +632,7 @@ func _cancel_connecting() -> void:
         push_error("Cannot cancel connecting, not in connecting state, something is wrong.")
         return
 
-    _connections.cancel_connecting()
+    _viewer.cancel_connection_preview()
 
     _state = CGEState.DEFAULT
 
@@ -831,8 +642,8 @@ func _handle_mouse_button_left(event: InputEventMouseButton):
     var hit_node: CGEGraphElementUI = null
 
     if event.pressed:
-        hit_node = get_graph_element_under_mouse()
-    
+        hit_node = _viewer.get_graph_element_under_mouse()
+
     if event.pressed:
         # clicked on a node
         if hit_node:
@@ -849,11 +660,11 @@ func _handle_mouse_button_left(event: InputEventMouseButton):
                 if not hit_node.is_selected():
                     clear_selection()
                     select_graph_element(hit_node)
-            _start_dragging(get_mouse_screen_coordinates())
+            _start_dragging(_viewer.get_mouse_screen_coordinates())
             # else:
         else:
             # clicked on empty space, start drag-box selection
-            _start_drag_box_selection(get_mouse_screen_coordinates())
+            _start_drag_box_selection(_viewer.get_mouse_screen_coordinates())
     # released
     else:
         var was_dragging = is_dragging()
@@ -869,7 +680,7 @@ func _handle_mouse_button_left(event: InputEventMouseButton):
 func _handle_mouse_button_right(event: InputEventMouseButton) -> void:
     # Called when an event is an InputEventMouseButton with button_index MOUSE_BUTTON_RIGHT
     var hit_node: CGEGraphElementUI = null
-    hit_node = get_mouse_over_node()
+    hit_node = _viewer.get_mouse_over_node()
 
     if event.pressed:
         if hit_node:
@@ -879,21 +690,15 @@ func _handle_mouse_button_right(event: InputEventMouseButton) -> void:
             _stop_connecting(hit_node)
 
 
-## Behavior on mouse motion (panning, dragging, drag-box selecting, connecting)
+## Behavior on mouse motion (dragging, drag-box selecting, connecting). Panning is handled by the
+## embedded [CGEGraphViewer] and never reaches here.
 func _handle_mouse_motion(event: InputEventMouseMotion):
     # Called when an event is an InputEventMouseMotion
-    # Handle panning the view here if needed
     match event.button_mask:
-        MOUSE_BUTTON_MASK_MIDDLE:
-            # Middle mouse button is pressed, handle panning
-            _h_scroll_bar.value -= event.relative.x
-            _v_scroll_bar.value -= event.relative.y
-            queue_redraw()
-        
         MOUSE_BUTTON_LEFT:
             if is_dragging():
-                _drag_end_position = get_mouse_screen_coordinates()
-                var mouse_delta = (_drag_end_position - _drag_start_position) / zoom
+                _drag_end_position = _viewer.get_mouse_screen_coordinates()
+                var mouse_delta = (_drag_end_position - _drag_start_position) / _viewer.zoom
                 for i in range(_selection.size()):
                     var selected_node = _selection[i]
                     # for now, specifically do not move CGEGraphLinkUI
@@ -904,144 +709,21 @@ func _handle_mouse_motion(event: InputEventMouseMotion):
                     selected_node.position = _drag_nodes_start_positions[i] + mouse_delta
                     selected_node.moved.emit() # TODO fix this, not pretty
             elif is_drag_box_selecting():
-                _drag_box_end = get_mouse_screen_coordinates()
+                _drag_box_end = _viewer.get_mouse_screen_coordinates()
                 queue_redraw() # Redraw to show the selection box
-        
+
         MOUSE_BUTTON_RIGHT:
             if is_connecting():
                 var hit_node: CGEGraphElementUI = null
-                hit_node = get_mouse_over_node()
+                hit_node = _viewer.get_mouse_over_node()
 
-                _connections.handle_mouse_motion_button_right(hit_node, get_mouse_world_coordinates())
-
-
-## Update scrollbar page sizes based on viewport size.
-func _update_scrollbar_pages() -> void:
-    if _h_scroll_bar:
-        _h_scroll_bar.page = size.x * 0.8
-    if _v_scroll_bar:
-        _v_scroll_bar.page = size.y * 0.8
-
-
-## Center the scrollbars so the view starts at origin (0, 0).
-func _center_scrollbars() -> void:
-    if _h_scroll_bar:
-        _h_scroll_bar.value = - _h_scroll_bar.page / 2.0
-    if _v_scroll_bar:
-        _v_scroll_bar.value = - _v_scroll_bar.page / 2.0
-
-
-## Called when the horizontal scroll bar value changes.
-func _on_h_scroll_changed(value: float) -> void:
-    # This is not ideal since we need to think about changing both variables. Maybe change this
-    _content.position.x = - value
-    _grid.offset.x = - value
-    pass
-
-
-## Called when the vertical scroll bar value changes.
-func _on_v_scroll_changed(value: float) -> void:
-    # This is not ideal since we need to think about changing both variables. Maybe change this
-    _content.position.y = - value
-    _grid.offset.y = - value
-    pass
+                _viewer.update_connection_preview(hit_node)
 
 
 ## Called when a new link is requested between two nodes.
 func _on_new_link_requested(start_node: CGEGraphNodeUI, end_node: CGEGraphNodeUI) -> void:
     var cmd: CGECommand = CGEAddLinkCommand.new(self, start_node.get_id(), end_node.get_id())
     execute_command(cmd)
-
-
-## Called when a new node is created in the graph. Responsible for creating the UI of the created logic-node.[br]
-## Calls [method node_created] for additional behavior.
-func _on_node_created(node_id: int) -> void:
-    var pos: Vector2 = get_screen_center_coordinates()
-
-    var new_node: CGEGraphNodeUI = graph_node_ui_scene.instantiate()
-    new_node.graph_element = graph.get_node(node_id)
-    _nodes.add_child(new_node)
-    new_node.position = pos
-    _nodes_ref[node_id] = new_node
-
-    node_created(node_id, new_node)
-
-
-## Called when a node is deleted from the graph.
-func _on_node_deleted(node_id: int) -> void:
-    _selection.erase(_nodes_ref[node_id])
-    _nodes_ref[node_id].queue_free()
-    _nodes_ref.erase(node_id) # Remove from dictionary to avoid freed object references
-
-
-## Called when a new link is created in the graph.
-func _on_link_created(start_node_id: int, end_node_id: int, link_id: int) -> void:
-    # Create the CGEGraphLinkUI node
-    var new_link: CGEGraphLinkUI = graph_link_ui_scene.instantiate()
-    new_link.graph_element = graph.get_link(link_id)
-    _connections.add_child(new_link)
-
-    new_link.link_to(get_graph_node(start_node_id), get_graph_node(end_node_id))
-
-    _links_ref[link_id] = new_link
-
-    # Update parallel link offsets for this node pair
-    _update_parallel_link_offsets(start_node_id, end_node_id)
-
-
-## Called when a link is deleted from the graph.
-func _on_link_deleted(link_id: int) -> void:
-    var link_to_delete: CGEGraphLinkUI = get_graph_link(link_id)
-    if link_to_delete == null:
-        push_error("Tried to delete link %d but it was not found.", link_id)
-        return
-
-    # Store node IDs before deleting
-    var start_node_id = link_to_delete.start_node.get_id() if link_to_delete.start_node else -1
-    var end_node_id = link_to_delete.end_node.get_id() if link_to_delete.end_node else -1
-
-    _links_ref.erase(link_id)
-    link_to_delete.queue_free()
-
-    # Update parallel link offsets for this node pair
-    if start_node_id >= 0 and end_node_id >= 0:
-        _update_parallel_link_offsets(start_node_id, end_node_id)
-
-
-## Update parallel link offsets for all links between two nodes.
-## Since the graph forbids duplicate links (for now), there can only be max 2: A->B and B->A
-func _update_parallel_link_offsets(node_a_id: int, node_b_id: int) -> void:
-    # Get links from both nodes (more efficient than iterating all links)
-    var link_a_to_b_id: int = -1
-    var link_b_to_a_id: int = -1
-
-    # Check links from node A
-    for link in graph.get_links_from(node_a_id):
-        if link.end_node_id == node_b_id:
-            link_a_to_b_id = link.id
-            break
-
-    # Check links from node B
-    for link in graph.get_links_from(node_b_id):
-        if link.end_node_id == node_a_id:
-            link_b_to_a_id = link.id
-            break
-
-    # Get UI links
-    var link_a_to_b: CGEGraphLinkUI = get_graph_link(link_a_to_b_id) if link_a_to_b_id >= 0 else null
-    var link_b_to_a: CGEGraphLinkUI = get_graph_link(link_b_to_a_id) if link_b_to_a_id >= 0 else null
-
-    # Assign offsets if both links exist
-    if link_a_to_b != null and link_b_to_a != null:
-        # Two parallel links: offset in opposite directions
-        link_a_to_b.parallel_link_offset = - OFFSET_DISTANCE
-        link_b_to_a.parallel_link_offset = OFFSET_DISTANCE
-    else:
-        # Only one link: no offset needed
-        if link_a_to_b != null:
-            link_a_to_b.parallel_link_offset = 0.0
-        if link_b_to_a != null:
-            link_b_to_a.parallel_link_offset = 0.0
 
 
 ## Called when the "Add Node" action is triggered from the toolbar.
@@ -1076,7 +758,7 @@ func _delete_selection() -> void:
 func _copy_selection(clipboard: CGEClipboard) -> void:
     if _selection.is_empty():
         return
-    
+
     clipboard.clear()
 
     var selected_nodes_ids: Array[int] = []
@@ -1087,7 +769,7 @@ func _copy_selection(clipboard: CGEClipboard) -> void:
             var node: CGEGraphNodeUI = element
             clipboard.add_node(node)
             selected_nodes_ids.append(node.get_id())
-    
+
     # Copy links
     # Only keep the ones connected to two selected nodes
     for element in _selection:
@@ -1110,7 +792,7 @@ func _cut_selection(clipboard: CGEClipboard) -> void:
 func _paste_selection(clipboard: CGEClipboard) -> CGEPasteClipboardCommand:
     if clipboard.is_empty():
         return null
-    
+
     var cmd := CGEPasteClipboardCommand.new(self, clipboard.nodes, clipboard.links)
     execute_command(cmd)
     return cmd
@@ -1120,7 +802,7 @@ func _paste_selection(clipboard: CGEClipboard) -> CGEPasteClipboardCommand:
 func _duplicate_selection() -> void:
     if _selection.is_empty():
         return
-    
+
     var cmd := CGEDuplicateSelectionCommand.new(self)
     execute_command(cmd)
 
@@ -1152,11 +834,11 @@ func _on_save_requested() -> void:
     if current_file_path == "":
         _on_save_as_requested()
         return
-    
+
     # Directly save to file, if modified
     if not file_is_modified:
         return
-    
+
     save_to_file(current_file_path)
 
 
@@ -1165,7 +847,7 @@ func _on_save_as_requested() -> void:
     _instantiate_file_dialog()
     _file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
     _file_dialog.file_selected.connect(save_to_file, CONNECT_ONE_SHOT)
-    
+
     _file_dialog.show()
 
 
@@ -1174,7 +856,7 @@ func _on_load_requested() -> void:
     _instantiate_file_dialog()
     _file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
     _file_dialog.file_selected.connect(load_from_file, CONNECT_ONE_SHOT)
-    
+
     if current_file_path != "":
         _file_dialog.current_dir = current_file_path.get_base_dir()
 

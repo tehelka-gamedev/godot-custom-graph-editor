@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `CGEGraph.get_all_link_ids()`, mirroring `get_all_node_ids()`.
+- A new `CGEGraphViewer` (`graph_viewer.gd`/`graph_viewer.tscn`) node, to have only the graph view accessible at runtime if needed.
+
 ### Changed
 - Renamed `CGETranslateSelectionCommand` to `CGETranslateCommand` (`translate_command.gd`), as it does not relate necessarily to selection.
+- **BREAKING**: `CGEGraphEditor` nows offload graph navigation to a child node `CGEGraphViewer` (`graph_viewer.gd`/`graph_viewer.tscn`).
+  - All previously-public methods/properties used by commands and subclasses (`graph`, `get_graph_node()`,
+    `get_graph_link()`, `get_graph_element()`, `deserialize_graph_runtime()`) keep working unchanged by forwarding them. `node_class`/`link_class`/`graph_node_ui_scene`/`graph_link_ui_scene` exports are unaffected.
+  - **Removed**: `zoom`/`zoom_step`/`max_zoom`/`min_zoom` exports moved to the new `CGEGraphViewer`, so edit the `%Viewer` node instead.
+  - **Removed**: dead `connection_made`, `connection_removed`, `node_dragged` signals on `CGEGraphEditor` (it was never emitted).
 
 ### Deleted
 - `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateCommand` (old `CGETranslateSelectionCommand`)

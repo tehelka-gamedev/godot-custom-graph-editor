@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://addons/custom_graph_editor/graph_viewer.gd" id="1_gv001"]
+[ext_resource type="Script" uid="uid://dme7snxgi16we" path="res://addons/custom_graph_editor/UI/grid.gd" id="2_1no42"]
+
+[node name="GraphViewer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_gv001")
+
+[node name="Grid" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_1no42")
+offset = Vector2(460.8, 259.2)
+metadata/_edit_lock_ = true
+
+[node name="Content" type="Control" parent="."]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 460.8
+offset_top = 259.2
+offset_right = 460.80005
+offset_bottom = 259.2
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+metadata/_edit_lock_ = true
+
+[node name="HScrollBar" type="HScrollBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 0.993
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_right = -0.0400391
+grow_horizontal = 2
+grow_vertical = 0
+min_value = -4000.0
+max_value = 4000.0
+page = 921.6
+value = -460.8
+
+[node name="VScrollBar" type="VScrollBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 0.989
+offset_left = -8.0
+offset_top = 39.0
+offset_bottom = -0.08001709
+grow_horizontal = 0
+grow_vertical = 2
+min_value = -2000.0
+max_value = 2000.0
+page = 518.4
+value = -259.2
