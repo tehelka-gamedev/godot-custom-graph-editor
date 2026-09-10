@@ -6,37 +6,43 @@ extends CGEGraphElementUI
 ## This class handles the visual representation and interaction of a link between two nodes in the custom graph editor.
 
 ## Width of the link line (between 1 and 20 pixels)
-@export_range(1, 20, 1, "or_greater", "suffix:px") var width:int = 3
+@export_range(1, 20, 1, "or_greater", "suffix:px") var width: int = 3
 ## Color of the link when not selected
-@export var color:Color = Color.WHITE
+@export var color: Color = Color.WHITE
 ## Color of the link when hovered or selected (hover not implemented yet)
 @export var hover_color: Color = Color.RED
 ## Whether the link line is antialiased
-@export var antialiased:bool = true
+@export var antialiased: bool = true
 ## Texture used for the arrow at the end of the link (if any)
 @export var arrow_texture: Texture2D = null
 
 ## Points of the link, expressed in the node's space (so (0,0) is on the node's origin)
 ## points[0] must always be [0;0] !
-var points:Array[Vector2] = [Vector2.ZERO, Vector2.ZERO]
+var points: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO]
 
 ## The starting node UI of the link
-var start_node: CGEGraphNodeUI = null :
+var start_node: CGEGraphNodeUI = null:
     set(value):
         if start_node != null:
             start_node.moved.disconnect(_on_start_node_moved)
+            start_node.visibility_changed.disconnect(_update_visibility_from_nodes)
         start_node = value
         position = start_node.get_center()
         start_node.moved.connect(_on_start_node_moved)
+        start_node.visibility_changed.connect(_update_visibility_from_nodes)
+        _update_visibility_from_nodes()
         queue_redraw()
 
 ## The ending node UI of the link.
-var end_node: CGEGraphNodeUI = null :
+var end_node: CGEGraphNodeUI = null:
     set(value):
         if end_node != null:
             end_node.moved.disconnect(_on_end_node_moved)
+            end_node.visibility_changed.disconnect(_update_visibility_from_nodes)
         end_node = value
         end_node.moved.connect(_on_end_node_moved)
+        end_node.visibility_changed.connect(_update_visibility_from_nodes)
+        _update_visibility_from_nodes()
         queue_redraw()
 
 ## Type of arrow to draw (see CGEEnum.GraphType). Only DIRECTED is supported for now.
@@ -45,7 +51,7 @@ var arrow_type: CGEEnum.GraphType = CGEEnum.GraphType.DIRECTED
 ## Offset for parallel links (perpendicular to link direction).
 ## Positive = offset to the right, negative = offset to the left
 ## Only applied when points.size() == 2 (no manual anchor points)
-var parallel_link_offset: float = 0.0 :
+var parallel_link_offset: float = 0.0:
     set(value):
         parallel_link_offset = value
         _refresh_points()
@@ -61,13 +67,13 @@ func _draw() -> void:
     if len(points) <= 1:
         return
     # Draw each pair of points
-    var multi_line_vector_array:PackedVector2Array = PackedVector2Array()
+    var multi_line_vector_array: PackedVector2Array = PackedVector2Array()
     var multi_line_color_array: PackedColorArray = PackedColorArray()
 
-    var color:Color = color if not selected else hover_color # I do not handle hover yet
-    for i in range(len(points)-1):
+    var color: Color = color if not selected else hover_color # I do not handle hover yet
+    for i in range(len(points) - 1):
         multi_line_vector_array.append(points[i])
-        multi_line_vector_array.append(points[i+1])
+        multi_line_vector_array.append(points[i + 1])
         multi_line_color_array.append(color)
     # Uses draw_multiline_colors to be more efficient if there is a large number of points
     # I do not know if if it is more efficient to just call draw_line for just a few segments (probably?)
@@ -98,9 +104,9 @@ func is_on_line(pos: Vector2) -> bool:
 
     pos -= position
 
-    for i in range(points.size() -1):
+    for i in range(points.size() - 1):
         var segment_start: Vector2 = points[i]
-        var segment_end: Vector2 = points[i+1]
+        var segment_end: Vector2 = points[i + 1]
         var closest_point: Vector2 = Geometry2D.get_closest_point_to_segment(pos, segment_start, segment_end)
 
         # If the distance to the closest point is closer than the width, it's on the line
@@ -123,10 +129,10 @@ func intersects_rect(rect: Rect2) -> bool:
 
         # Check if segment intersects any of the rectangle's edges
         var rect_edges = [
-            [rect.position, Vector2(rect.end.x, rect.position.y)],  # Top
-            [Vector2(rect.end.x, rect.position.y), rect.end],  # Right
-            [rect.end, Vector2(rect.position.x, rect.end.y)],  # Bottom
-            [Vector2(rect.position.x, rect.end.y), rect.position]  # Left
+            [rect.position, Vector2(rect.end.x, rect.position.y)], # Top
+            [Vector2(rect.end.x, rect.position.y), rect.end], # Right
+            [rect.end, Vector2(rect.position.x, rect.end.y)], # Bottom
+            [Vector2(rect.position.x, rect.end.y), rect.position] # Left
         ]
 
         for edge in rect_edges:
@@ -155,11 +161,11 @@ func get_ending_point() -> Vector2:
 
 ## Draw the arrow at the end of the link
 func _draw_arrow() -> void:
-    var color:Color = color if not selected else hover_color # I do not handle hover yet
+    var color: Color = color if not selected else hover_color # I do not handle hover yet
     if arrow_texture != null and arrow_type == CGEEnum.GraphType.DIRECTED:
-        var last_point: Vector2 = points[len(points)-1]
-        var last_vector: Vector2 = points[len(points)-1] - points[len(points)-2]
-        var draw_pos: Vector2 = -arrow_texture.get_size()/2
+        var last_point: Vector2 = points[len(points) - 1]
+        var last_vector: Vector2 = points[len(points) - 1] - points[len(points) - 2]
+        var draw_pos: Vector2 = - arrow_texture.get_size() / 2
         # Rotate the next drawing by the angle of the last point
         draw_set_transform(last_point, atan2(last_vector.y, last_vector.x))
         draw_texture(arrow_texture, draw_pos, color)
@@ -168,7 +174,7 @@ func _draw_arrow() -> void:
 ## Called when the start node is moved.
 ## Assumes there are at least 2 points.
 func _on_start_node_moved() -> void:
-    var offset:Vector2 = position - start_node.position
+    var offset: Vector2 = position - start_node.position
     position = start_node.get_center()
     # points[0] is [0;0], only change other
 
@@ -187,6 +193,13 @@ func _on_node_moved(node: CGEGraphNodeUI) -> void:
         return
 
     _refresh_points()
+
+
+## Hide this link if any node it is connected to is hidden. Otherwise it is visible.
+func _update_visibility_from_nodes() -> void:
+    if start_node == null or end_node == null:
+        return
+    visible = start_node.visible and end_node.visible
 
 
 ## Recompute the points position based on the start_node and end_node position. Takes into account parallel link offset.
@@ -223,19 +236,19 @@ func _refresh_points() -> void:
 
 ## String representation of the link UI
 func _to_string() -> String:
-    return "UI('%s')" % [ graph_element ]
+    return "UI('%s')" % [graph_element]
 
 
 ## Given a link, returns the closest intersection point on the bounding box of a CGEGraphNodeUI
-func _get_closest_intersection_point_on_node(link_start: Vector2, link_end: Vector2, node: CGEGraphNodeUI, debug_draw:bool = false) -> Vector2:
+func _get_closest_intersection_point_on_node(link_start: Vector2, link_end: Vector2, node: CGEGraphNodeUI, debug_draw: bool = false) -> Vector2:
     var node_rect: Rect2 = node.get_rect()
 
     var best_point: Vector2 = link_end
 
-    var top_left:= node_rect.position
-    var top_right:= top_left + Vector2(node_rect.size.x, 0)
-    var bottom_left:= top_left + Vector2(0, node_rect.size.y)
-    var bottom_right:= node_rect.end
+    var top_left := node_rect.position
+    var top_right := top_left + Vector2(node_rect.size.x, 0)
+    var bottom_left := top_left + Vector2(0, node_rect.size.y)
+    var bottom_right := node_rect.end
 
     
     var edges: Array[Vector2] = [
@@ -246,16 +259,16 @@ func _get_closest_intersection_point_on_node(link_start: Vector2, link_end: Vect
     ]
 
     for i in range(0, len(edges), 2):
-        var intersection: Variant = Geometry2D.segment_intersects_segment(link_start, link_end, edges[i], edges[i+1])
+        var intersection: Variant = Geometry2D.segment_intersects_segment(link_start, link_end, edges[i], edges[i + 1])
         if intersection == null:
             if debug_draw:
-                draw_line(edges[i]-position, edges[i+1]-position, Color.RED, 5)
+                draw_line(edges[i] - position, edges[i + 1] - position, Color.RED, 5)
             continue
         
         if debug_draw:
-            draw_line(edges[i]-position, edges[i+1]-position, Color.BLUE, 5)
+            draw_line(edges[i] - position, edges[i + 1] - position, Color.BLUE, 5)
 
-        if( link_start.distance_squared_to(intersection as Vector2) < link_start.distance_squared_to(best_point) ):
+        if (link_start.distance_squared_to(intersection as Vector2) < link_start.distance_squared_to(best_point)):
             best_point = intersection as Vector2
     
     if debug_draw:
