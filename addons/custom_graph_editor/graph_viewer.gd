@@ -301,8 +301,19 @@ func screen_rect_to_world_rect(rect: Rect2) -> Rect2:
     )
 
 
+## Current pan position: the world origin's offset  from the top-left of the viewport.
+## Either set this variable (directly or with a [Tween] for moving with animation)
+## [br] See also [method pan_to_graph_element], [method get_pan_position] and [method fit_to_view].
+var scroll_position: Vector2:
+    get:
+        return Vector2(_h_scroll_bar.value, _v_scroll_bar.value)
+    set(value):
+        _h_scroll_bar.value = value.x
+        _v_scroll_bar.value = value.y
+
+
 ## Adjusts pan and zoom so every current node UI is inside in the viewport, with [param margin]
-## pixels at each side. 
+## pixels at each side.
 ## You might want to call it after an [code]await get_tree().process_frame[/code] right after
 ## [method load_graph] if you call it from [code]_ready()[/code]).
 func fit_to_view(margin: float = 40.0) -> void:
@@ -320,9 +331,32 @@ func fit_to_view(margin: float = 40.0) -> void:
 
     set_zoom(min(size.x / bounds.size.x, size.y / bounds.size.y))
 
-    var bounds_center: Vector2 = bounds.position + bounds.size / 2.0
-    _h_scroll_bar.value = bounds_center.x * zoom - size.x / 2.0
-    _v_scroll_bar.value = bounds_center.y * zoom - size.y / 2.0
+    scroll_position = _scroll_position_centered_on(bounds.position + bounds.size / 2.0)
+
+
+## Returns the [member scroll_position] that would center the view on [param element] (a node or a
+## link). Can be useful for moving animation of the panning.
+func get_pan_position(element: CGEGraphElementUI) -> Vector2:
+    var world_point: Vector2
+    if element is CGEGraphNodeUI:
+        world_point = element.get_center()
+    elif element is CGEGraphLinkUI:
+        world_point = (element.start_node.get_center() + element.end_node.get_center()) / 2.0
+    else:
+        push_error("get_pan_position: unsupported graph element type '%s'" % element)
+        return scroll_position
+    return _scroll_position_centered_on(world_point)
+
+
+## Instantly pans the view centered on [param element] (a node or a link).
+## [br] See [method get_pan_position] if you want to animate the panning with a [Tween] for instance.
+func pan_to_graph_element(element: CGEGraphElementUI) -> void:
+    scroll_position = get_pan_position(element)
+
+
+## Given a point in world space, returns the [member scroll_position] that centers the viewport on it.
+func _scroll_position_centered_on(world_point: Vector2) -> Vector2:
+    return world_point * zoom - size / 2.0
 
 
 ## Adds [param control] as a child of the viewer's content layer (the same space nodes and links
