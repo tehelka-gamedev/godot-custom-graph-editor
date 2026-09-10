@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `background_texture_stretch`.
 - `examples/viewer_only/`: a minimal standalone `CGEGraphViewer` demo (no editor graph preview).
 - `examples/pretty_viewer/`: a fancier standalone `CGEGraphViewer` demo with animations and moving object following node paths.
+- Helpers to control the panning of the view.
 
 ### Changed
 - Renamed `CGETranslateSelectionCommand` to `CGETranslateCommand` (`translate_command.gd`), as it does not relate necessarily to selection.
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `get_graph_link()`, `get_graph_element()`, `deserialize_graph_runtime()`) keep working unchanged by forwarding them. `node_class`/`link_class`/`graph_node_ui_scene`/`graph_link_ui_scene` exports are unaffected.
   - **Removed**: `zoom`/`zoom_step`/`max_zoom`/`min_zoom` exports moved to the new `CGEGraphViewer`, so edit the `%Viewer` node instead.
   - **Removed**: dead `connection_made`, `connection_removed`, `node_dragged` signals on `CGEGraphEditor` (it was never emitted).
+- Links now hide when one of their linked node is hidden.
 
 ### Fixed
 - `CGEGraphNodeUI` now emits `moved` automatically on any transform change (with
