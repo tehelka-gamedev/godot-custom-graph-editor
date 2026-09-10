@@ -66,6 +66,11 @@ func _process(_delta):
 func _draw() -> void:
     if len(points) <= 1:
         return
+
+    # For an unclear reason, arrows disappeared sometimes so we make sure
+    # they have the right rect and are drawn when a part appears on the screen
+    _update_visibility_rect()
+
     # Draw each pair of points
     var multi_line_vector_array: PackedVector2Array = PackedVector2Array()
     var multi_line_color_array: PackedColorArray = PackedColorArray()
@@ -232,6 +237,21 @@ func _refresh_points() -> void:
     points[-1] = _get_closest_intersection_point_on_node(link_start, link_end, end_node) - start_node.get_center()
 
     queue_redraw()
+
+
+## Ensure the rect of the arrow is correct, so the rendering server still
+## draws it properly.
+func _update_visibility_rect() -> void:
+    if points.is_empty():
+        return
+
+    var bounds: Rect2 = Rect2(points[0], Vector2.ZERO)
+    for point in points:
+        bounds = bounds.expand(point)
+
+    bounds = bounds.grow(arrow_texture.get_size().length() if arrow_texture != null else width)
+
+    RenderingServer.canvas_item_set_custom_rect(get_canvas_item(), true, bounds)
 
 
 ## String representation of the link UI

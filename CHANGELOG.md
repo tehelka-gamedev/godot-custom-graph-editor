@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - `CGEGraphNodeUI` now emits `moved` automatically on any transform change (with
   `NOTIFICATION_LOCAL_TRANSFORM_CHANGED`), to fix bugs and avoid future bugs (when the signal emit was omitted).
+- Links drawing do not sometimes disappear anymore.
 
 ### Deleted
 - `CGEMoveNodeCommand` deleted, as it is not used and just a subset of `CGETranslateCommand` (old `CGETranslateSelectionCommand`)
