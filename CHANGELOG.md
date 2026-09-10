@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0-beta] - 2026-09-10
+
 ### Added
 - `CGEGraph.get_all_link_ids()`, mirroring `get_all_node_ids()`.
 - A new `CGEGraphViewer` (`graph_viewer.gd`/`graph_viewer.tscn`) node, to have only the graph view accessible at runtime if needed.
@@ -109,7 +111,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Serialization/deserialization
 - Location map example
 
-[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.7.0-beta...HEAD
+[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.8.0-beta...HEAD
+[0.8.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.7.0-beta...v0.8.0-beta
 [0.7.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.1-beta...v0.7.0-beta
 [0.6.1-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.0-beta...v0.6.1-beta
 [0.6.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.5.0-beta...v0.6.0-beta
