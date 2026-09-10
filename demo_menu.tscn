@@ -138,6 +138,21 @@ text = "A fancier standalone CGEGraphViewer: fit-to-view, a traveling marker, an
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="InteractiveViewerButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Interactive Viewer Example"
+
+[node name="InteractiveViewerDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "A standalone CGEGraphViewer with click-to-select, animated pan-to-node, hover highlighting, and locked/unlockable nodes"
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="Footer" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10

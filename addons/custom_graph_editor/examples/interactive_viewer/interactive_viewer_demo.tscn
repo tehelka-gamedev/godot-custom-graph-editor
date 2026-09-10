@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://0ipeuy357x32"]
+
+[ext_resource type="Script" uid="uid://bqu0164v3ctb1" path="res://addons/custom_graph_editor/examples/interactive_viewer/interactive_viewer_demo.gd" id="1_ivd001"]
+[ext_resource type="PackedScene" path="res://addons/custom_graph_editor/graph_viewer.tscn" id="2_ivd001"]
+[ext_resource type="PackedScene" path="res://addons/custom_graph_editor/examples/interactive_viewer/interactive_node_ui.tscn" id="3_ivd001"]
+
+[node name="InteractiveViewerDemo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ivd001")
+
+[node name="Viewer" parent="." instance=ExtResource("2_ivd001")]
+unique_name_in_owner = true
+layout_mode = 1
+focus_mode = 2
+graph_node_ui_scene = ExtResource("3_ivd001")
+zoom = 1.291342371453937
+show_scrollbars = false
+background_color = Color(0.10196079, 0.10980392, 0.14117648, 1)
+
+[node name="InfoPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 160.0
+grow_horizontal = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="InfoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="InfoLabel" type="Label" parent="InfoPanel/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select a location"
+autowrap_mode = 2
+
+[node name="HintLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = -311.0
+offset_right = 422.0
+offset_bottom = -262.0
+grow_vertical = 0
+text = "Click a location to select it and pan there.
+Some locations are locked until unlocked below."
+
+[node name="UnlockButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = -254.0
+offset_right = 282.0
+offset_bottom = -214.0
+grow_vertical = 0
+text = "Unlock a location (2 left)"

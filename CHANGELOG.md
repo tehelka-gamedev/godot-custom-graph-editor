@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `background_texture_stretch`.
 - `examples/viewer_only/`: a minimal standalone `CGEGraphViewer` demo (no editor graph preview).
 - `examples/pretty_viewer/`: a fancier standalone `CGEGraphViewer` demo with animations and moving object following node paths.
+- `examples/interactive_viewer/`: a `CGEGraphViewer` demo with added interactivity (click on node and unlocked nodes).
 - Helpers to control the panning of the view.
 
 ### Changed
