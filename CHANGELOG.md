@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `examples/pretty_viewer/`: a fancier standalone `CGEGraphViewer` demo with animations and moving object following node paths.
 - `examples/interactive_viewer/`: a `CGEGraphViewer` demo with added interactivity (click on node and unlocked nodes).
 - Helpers to control the panning of the view.
+- A fancier demo menu. :)
 
 ### Changed
 - Renamed `CGETranslateSelectionCommand` to `CGETranslateCommand` (`translate_command.gd`), as it does not relate necessarily to selection.

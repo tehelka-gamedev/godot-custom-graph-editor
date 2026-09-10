@@ -1,6 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfj8yvxkwn0h5"]
+[gd_scene load_steps=11 format=3 uid="uid://bfj8yvxkwn0h5"]
 
 [ext_resource type="Script" uid="uid://bhonxrm7tn81p" path="res://demo_menu.gd" id="1_demo_menu"]
+[ext_resource type="PackedScene" path="res://demo_button.tscn" id="2_demo_button"]
+[ext_resource type="PackedScene" uid="uid://d2vx8ymqvfabc" path="res://addons/custom_graph_editor/examples/minimal/minimal_graph_editor.tscn" id="3_minimal"]
+[ext_resource type="PackedScene" uid="uid://c8y2jlam3xabc" path="res://addons/custom_graph_editor/examples/location_map/location_map_editor.tscn" id="4_location_map"]
+[ext_resource type="PackedScene" uid="uid://binspactedscn" path="res://addons/custom_graph_editor/examples/inspector_actions/inspector_actions_editor.tscn" id="5_inspector_actions"]
+[ext_resource type="PackedScene" uid="uid://dkrip55obyrje" path="res://addons/custom_graph_editor/examples/viewer_only/viewer_only_demo.tscn" id="6_viewer_only"]
+[ext_resource type="PackedScene" uid="uid://cwx7us6shlm1u" path="res://addons/custom_graph_editor/examples/pretty_viewer/pretty_viewer_demo.tscn" id="7_pretty_viewer"]
+[ext_resource type="PackedScene" uid="uid://0ipeuy357x32" path="res://addons/custom_graph_editor/examples/interactive_viewer/interactive_viewer_demo.tscn" id="8_interactive_viewer"]
 
 [sub_resource type="Gradient" id="Gradient_5vskn"]
 colors = PackedColorArray(0.14700636, 0.17211476, 0.28233087, 1, 0.13389999, 0.14493558, 0.19454, 1)
@@ -54,104 +61,60 @@ theme_override_font_sizes/font_size = 16
 text = "Select an example to explore:"
 horizontal_alignment = 1
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+current_tab = 0
+
+[node name="Editors" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 15
+metadata/_tab_index = 0
 
-[node name="MinimalButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
+[node name="MinimalDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Editors" instance=ExtResource("2_demo_button")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Minimal Example"
+demo_scene = ExtResource("3_minimal")
+title = "Minimal Example"
+description = "A basic graph editor with simple nodes and links"
 
-[node name="MinimalDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
+[node name="LocationMapDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Editors" instance=ExtResource("2_demo_button")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "A basic graph editor with simple nodes and links"
-horizontal_alignment = 1
-autowrap_mode = 2
+demo_scene = ExtResource("4_location_map")
+title = "Location Map Example"
+description = "An advanced example showing a location/travel map editor with extended nodes and links"
 
-[node name="Spacer2" type="Control" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(0, 10)
+[node name="InspectorActionsDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Editors" instance=ExtResource("2_demo_button")]
 layout_mode = 2
+demo_scene = ExtResource("5_inspector_actions")
+title = "Inspector Actions Example"
+description = "An example showing how to add custom controls and action buttons in inspector"
 
-[node name="LocationMapButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
+[node name="Viewers" type="VBoxContainer" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Location Map Example"
+size_flags_horizontal = 4
+theme_override_constants/separation = 15
+metadata/_tab_index = 1
 
-[node name="LocationMapDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
+[node name="ViewerOnlyDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Viewers" instance=ExtResource("2_demo_button")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "An advanced example showing a location/travel map editor with extended nodes and links"
-horizontal_alignment = 1
-autowrap_mode = 2
+demo_scene = ExtResource("6_viewer_only")
+title = "Viewer Only Example"
+description = "A standalone CGEGraphViewer with a hardcoded graph, no editor: read-only pan/zoom navigation"
 
-[node name="InspectorActionButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
+[node name="PrettyViewerDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Viewers" instance=ExtResource("2_demo_button")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Inspector Actions Example"
+demo_scene = ExtResource("7_pretty_viewer")
+title = "Pretty Viewer Example"
+description = "A fancier standalone CGEGraphViewer: fit-to-view, a traveling marker, and a live-animated node"
 
-[node name="InspectorActionDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
+[node name="InteractiveViewerDemoButton" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/TabContainer/Viewers" instance=ExtResource("2_demo_button")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "An example showing how to add custom controls and action buttons in inspector"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="ViewerOnlyButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Viewer Only Example"
-
-[node name="ViewerOnlyDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "A standalone CGEGraphViewer with a hardcoded graph, no editor: read-only pan/zoom navigation"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="PrettyViewerButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Pretty Viewer Example"
-
-[node name="PrettyViewerDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "A fancier standalone CGEGraphViewer: fit-to-view, a traveling marker, and a live-animated node"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="InteractiveViewerButton" type="Button" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 60)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Interactive Viewer Example"
-
-[node name="InteractiveViewerDescription" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer/ButtonsContainer"]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "A standalone CGEGraphViewer with click-to-select, animated pan-to-node, hover highlighting, and locked/unlockable nodes"
-horizontal_alignment = 1
-autowrap_mode = 2
+demo_scene = ExtResource("8_interactive_viewer")
+title = "Interactive Viewer Example"
+description = "A standalone CGEGraphViewer with click-to-select, animated pan-to-node, hover highlighting, and locked/unlockable nodes"
 
 [node name="Footer" type="Label" parent="DemoSelectorContainer/DemoSelectorContent/VBoxContainer"]
 layout_mode = 2
