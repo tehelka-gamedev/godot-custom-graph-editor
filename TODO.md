@@ -11,3 +11,4 @@
 
 ### Low Priority / Nice to Have
 - [ ] Export graph as image ?
+- [ ] Move `deserialize_graph_runtime()` (and probably `read_graph_file()`) to `CGEGraph` (maybe keep the viewer/editor versions as deprecated aliases ?)

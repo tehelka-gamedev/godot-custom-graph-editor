@@ -30,16 +30,32 @@ const OFFSET_DISTANCE = 15.0
 ### Exports
 
 @export_category("Nodes reference")
-## Graph UI node (scene) used to instantiate nodes
+## Graph UI node (scene) used to instantiate nodes.[br]
+## When embedded in a [CGEGraphEditor], set this on the editor instead (it overrides the viewer's value).
 @export var graph_node_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_node_ui.tscn")
-## Graph UI link (scene) used to instantiate links
-@export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
+## Graph UI link (scene) used to instantiate links (and the connection-drag preview).[br]
+## When embedded in a [CGEGraphEditor], set this on the editor instead (it overrides the viewer's value).
+@export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn"):
+    set(value):
+        graph_link_ui_scene = value
+        if _connections:
+            _connections.link_ui_scene = value
 ## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode.
-## Used by [method deserialize] / [method load_from_file].
-@export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd")
+## Applied to the current [member graph], and used by [method deserialize] / [method load_from_file].[br]
+## When embedded in a [CGEGraphEditor], set this on the editor instead (it overrides the viewer's value).
+@export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd"):
+    set(value):
+        node_class = value
+        if graph:
+            graph.node_class = value
 ## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink.
-## Used by [method deserialize] / [method load_from_file].
-@export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
+## Applied to the current [member graph], and used by [method deserialize] / [method load_from_file].[br]
+## When embedded in a [CGEGraphEditor], set this on the editor instead (it overrides the viewer's value).
+@export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd"):
+    set(value):
+        link_class = value
+        if graph:
+            graph.link_class = value
 
 @export_category("Viewer Settings")
 ## Current zoom amount
@@ -129,7 +145,7 @@ var _links_ref: Dictionary[int, CGEGraphLinkUI] = {}
 
 
 ## Reads and parses a .gegraph file, returning its raw [Dictionary] content (see
-## [method CGEGraphEditor.serialize] for the format), or [code]null[/code] if the
+## [method serialize] for the format), or [code]null[/code] if the
 ## file is missing or is not valid JSON.
 static func read_graph_file(path: String) -> Variant:
     if not FileAccess.file_exists(path):
@@ -226,8 +242,28 @@ func load_graph(new_graph: CGEGraph) -> void:
         _on_link_created(link.start_node_id, link.end_node_id, link_id)
 
 
+## Serialize the displayed graph into a Dictionary[String, Variant] with two sub-dictionaries: "nodes" and "links",
+## UI data included (positions...). Counterpart of [method deserialize].[br]
+## See [method CGEGraphNodeUI.serialize] and [method CGEGraphLinkUI.serialize] for more details on how nodes and links are serialized.
+func serialize() -> Dictionary[String, Variant]:
+    var data: Dictionary[String, Variant] = {}
+
+    var nodes_data: Dictionary = {}
+    for node_id in graph.get_all_node_ids():
+        nodes_data[node_id] = get_graph_node(node_id).serialize()
+
+    var links_data: Dictionary = {}
+    for link_id in graph.get_all_link_ids():
+        links_data[link_id] = get_graph_link(link_id).serialize()
+
+    data["nodes"] = nodes_data
+    data["links"] = links_data
+
+    return data
+
+
 ## Replaces the content of the displayed [member graph] with the one described by [param data] (the
-## format written by [method CGEGraphEditor.serialize]), restoring UI data too (node positions,
+## format written by [method serialize]), restoring UI data too (node positions,
 ## [method CGEGraphElementUI._update_ui_from_data]). Uses [member node_class] / [member link_class].[br]
 ## The [member graph] instance itself is kept (cleared then refilled), so references to it stay valid.[br]
 ## Must be called once the viewer is ready (e.g. from a parent's [code]_ready()[/code]).
@@ -271,10 +307,15 @@ func _unbind_current_graph() -> void:
         graph.node_deleted.disconnect(_on_node_deleted)
         graph.link_created.disconnect(_on_link_created)
         graph.link_deleted.disconnect(_on_link_deleted)
-    for node_ui in get_all_node_uis():
-        node_ui.queue_free()
-    for link_ui in get_all_link_uis():
+    # Links first (as CGEGraph.remove_node does), signals emitted before freeing so listeners get valid objects
+    for link_id in _links_ref.keys():
+        var link_ui: CGEGraphLinkUI = _links_ref[link_id]
+        link_ui_removed.emit(link_id, link_ui)
         link_ui.queue_free()
+    for node_id in _nodes_ref.keys():
+        var node_ui: CGEGraphNodeUI = _nodes_ref[node_id]
+        node_ui_removed.emit(node_id, node_ui)
+        node_ui.queue_free()
     _nodes_ref.clear()
     _links_ref.clear()
 

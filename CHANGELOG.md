@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `CGEGraphEditor.deserialize()` / `CGEGraphEditor.load_from_file()` now delegate to the viewer's new methods for the common part + additional editor stuff. Loading no longer leaves the last loaded node selected.
 - `CGEGraphEditor.load_from_file()` now returns a `bool` (`false` if the file is missing or invalid).
+- To avoid potential bugs, `node_class` / `link_class` / `graph_node_ui_scene` / `graph_link_ui_scene` now apply live. On `CGEGraphEditor`
+  they are forwarded to the embedded viewer. On a standalone `CGEGraphViewer`, `node_class` / `link_class` now
+  apply to its graph (previously only used by `deserialize()`).
+- `serialize()` moved to `CGEGraphViewer`. `CGEGraphEditor.serialize()` still exists and uses it.
+
+### Fixed
+- The connection preview now uses the custom `graph_link_ui_scene` instead of always the base link UI.
+- Links removed from the graph (or a graph swapped via `load_graph()`) are no longer left in the editor selection.
+  `CGEGraphViewer` now emits `node_ui_removed` / `link_ui_removed` when unbinding a graph.
 
 ## [0.8.0-beta] - 2026-09-10
 

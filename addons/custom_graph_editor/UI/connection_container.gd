@@ -11,8 +11,7 @@ extends Control
 signal request_link(start_node: CGEGraphNodeUI, end_node: CGEGraphNodeUI)
 
 ## Scene to use for creating link UI instances (for preview only)
-## This is set by the graph editor to match its graph_link_ui_scene. Not ideal and the truth should be at one position. That may be improved
-## in the future.
+## Kept in sync by [member CGEGraphViewer.graph_link_ui_scene], do not set it directly.
 var link_ui_scene: PackedScene = preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
 
 # References to the nodes involved in the current connection

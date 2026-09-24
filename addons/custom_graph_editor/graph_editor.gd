@@ -38,14 +38,30 @@ const MIN_DRAG_DISTANCE = 10.0
 ### Exports
 
 @export_category("Nodes reference")
-## Graph UI node (scene) used in the editor
-@export var graph_node_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_node_ui.tscn")
-## Graph UI link (scene) used in the editor
-@export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
-## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode
-@export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd")
-## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink
-@export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
+## Graph UI node (scene) used in the editor. Forwarded to [CGEGraphViewer].
+@export var graph_node_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_node_ui.tscn"):
+    set(value):
+        graph_node_ui_scene = value
+        if _viewer:
+            _viewer.graph_node_ui_scene = value
+## Graph UI link (scene) used in the editor. Forwarded to [CGEGraphViewer].
+@export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn"):
+    set(value):
+        graph_link_ui_scene = value
+        if _viewer:
+            _viewer.graph_link_ui_scene = value
+## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode. Forwarded to [CGEGraphViewer].
+@export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd"):
+    set(value):
+        node_class = value
+        if _viewer:
+            _viewer.node_class = value
+## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink. Forwarded to [CGEGraphViewer].
+@export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd"):
+    set(value):
+        link_class = value
+        if _viewer:
+            _viewer.link_class = value
 
 ### Regular variables
 
@@ -138,12 +154,11 @@ func _ready():
     _viewer.node_class = node_class
     _viewer.link_class = link_class
 
-    graph.node_class = node_class
-    graph.link_class = link_class
     _viewer.load_graph(graph)
 
     _viewer.node_ui_created.connect(node_created)
     _viewer.node_ui_removed.connect(func(node_id: int, node_ui: CGEGraphNodeUI): _selection.erase(node_ui))
+    _viewer.link_ui_removed.connect(func(link_id: int, link_ui: CGEGraphLinkUI): _selection.erase(link_ui))
     _viewer.link_requested.connect(_on_new_link_requested)
 
     if _toolbar:
@@ -269,22 +284,9 @@ func get_graph_link(link_id: int) -> CGEGraphLinkUI:
 
 
 ## Serialize the current graph to a Dictionary[String, Variant] for saving to file, in two sub-dictionaries: "nodes" and "links".[br]
-## See [method CGEGraphNodeUI.serialize] and [method CGEGraphLinkUI.serialize] for more details on how nodes and links are serialized.
+## See [method CGEGraphViewer.serialize].
 func serialize() -> Dictionary[String, Variant]:
-    var data: Dictionary[String, Variant] = {}
-
-    var nodes_data: Dictionary = {}
-    for node_id in graph.get_all_node_ids():
-        nodes_data[node_id] = get_graph_node(node_id).serialize()
-
-    var links_data: Dictionary = {}
-    for link_id in graph.get_all_link_ids():
-        links_data[link_id] = get_graph_link(link_id).serialize()
-
-    data["nodes"] = nodes_data
-    data["links"] = links_data
-
-    return data
+    return _viewer.serialize()
 
 
 ## Deserialize the graph from a Dictionary[String, Variant], recreating all nodes and links. See [method serialize] for the expected format.
