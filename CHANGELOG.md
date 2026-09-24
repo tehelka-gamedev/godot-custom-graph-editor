@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The connection preview now uses the custom `graph_link_ui_scene` instead of always the base link UI.
 - Links removed from the graph (or a graph swapped via `load_graph()`) are no longer left in the editor selection.
   `CGEGraphViewer` now emits `node_ui_removed` / `link_ui_removed` when unbinding a graph.
+- Connection-drag preview (and self-loop links) no longer spams "already connected" / "nonexistent connection"
+  errors for `visibility_changed` when start and end are the same node.
 
 ## [0.8.0-beta] - 2026-09-10
 

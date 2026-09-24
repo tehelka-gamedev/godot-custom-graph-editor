@@ -25,11 +25,11 @@ var start_node: CGEGraphNodeUI = null:
     set(value):
         if start_node != null:
             start_node.moved.disconnect(_on_start_node_moved)
-            start_node.visibility_changed.disconnect(_update_visibility_from_nodes)
+            _unwatch_visibility(start_node, end_node)
         start_node = value
         position = start_node.get_center()
         start_node.moved.connect(_on_start_node_moved)
-        start_node.visibility_changed.connect(_update_visibility_from_nodes)
+        _watch_visibility(start_node)
         _update_visibility_from_nodes()
         queue_redraw()
 
@@ -38,10 +38,10 @@ var end_node: CGEGraphNodeUI = null:
     set(value):
         if end_node != null:
             end_node.moved.disconnect(_on_end_node_moved)
-            end_node.visibility_changed.disconnect(_update_visibility_from_nodes)
+            _unwatch_visibility(end_node, start_node)
         end_node = value
         end_node.moved.connect(_on_end_node_moved)
-        end_node.visibility_changed.connect(_update_visibility_from_nodes)
+        _watch_visibility(end_node)
         _update_visibility_from_nodes()
         queue_redraw()
 
@@ -205,6 +205,23 @@ func _update_visibility_from_nodes() -> void:
     if start_node == null or end_node == null:
         return
     visible = start_node.visible and end_node.visible
+
+
+## Connect [param node]'s visibility to this link. Both ends share the same callable, so it can
+## already be connected when start and end are the same node (self-loop, or the connection preview
+## hovering its own start node).
+func _watch_visibility(node: CGEGraphNodeUI) -> void:
+    if not node.visibility_changed.is_connected(_update_visibility_from_nodes):
+        node.visibility_changed.connect(_update_visibility_from_nodes)
+
+
+## Disconnect [param node]'s visibility from this link, unless [param other_end] is the same node
+## and still needs it (see [method _watch_visibility]).
+func _unwatch_visibility(node: CGEGraphNodeUI, other_end: CGEGraphNodeUI) -> void:
+    if node == other_end:
+        return
+    if node.visibility_changed.is_connected(_update_visibility_from_nodes):
+        node.visibility_changed.disconnect(_update_visibility_from_nodes)
 
 
 ## Recompute the points position based on the start_node and end_node position. Takes into account parallel link offset.
