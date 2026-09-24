@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `CGEGraphViewer.load_from_file(path)` / `CGEGraphViewer.deserialize(data)`: load a `.gegraph` into a
+  standalone viewer with its UI data (node positions, principally).
+- `CGEGraphViewer.read_graph_file(path)`: static helper returning the parsed `.gegraph` dictionary (or `null`).
+
+### Changed
+- `CGEGraphEditor.deserialize()` / `CGEGraphEditor.load_from_file()` now delegate to the viewer's new methods for the common part + additional editor stuff. Loading no longer leaves the last loaded node selected.
+- `CGEGraphEditor.load_from_file()` now returns a `bool` (`false` if the file is missing or invalid).
+
 ## [0.8.0-beta] - 2026-09-10
 
 ### Added

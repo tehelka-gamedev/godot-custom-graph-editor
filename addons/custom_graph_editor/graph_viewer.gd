@@ -34,9 +34,11 @@ const OFFSET_DISTANCE = 15.0
 @export var graph_node_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_node_ui.tscn")
 ## Graph UI link (scene) used to instantiate links
 @export var graph_link_ui_scene := preload("res://addons/custom_graph_editor/UI/graph_link_ui.tscn")
-## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode
+## Script defining graph nodes (logic) in the graph. Must inherit CGEGraphNode.
+## Used by [method deserialize] / [method load_from_file].
 @export var node_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_node.gd")
-## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink
+## Script defining graph link (logic) in the graph. Must inherit CGEGraphLink.
+## Used by [method deserialize] / [method load_from_file].
 @export var link_class: GDScript = preload("res://addons/custom_graph_editor/logic/graph_link.gd")
 
 @export_category("Viewer Settings")
@@ -126,14 +128,10 @@ var _links_ref: Dictionary[int, CGEGraphLinkUI] = {}
 @onready var _v_scroll_bar: VScrollBar = %VScrollBar
 
 
-## Given a path to a .gegraph, returns a deserialized CGEGraph
-## allowing to have just node and connectivity info and scrap out
-## all the editor specific data.[br]
-##
-## [param path]: Path to the .gegraph file[br]
-## [param node_script]: GDScript class for nodes (must inherit from CGEGraphNode)[br]
-## [param link_script]: GDScript class for links (must inherit from CGEGraphLink)[br]
-static func deserialize_graph_runtime(path: String, node_script: GDScript, link_script: GDScript) -> CGEGraph:
+## Reads and parses a .gegraph file, returning its raw [Dictionary] content (see
+## [method CGEGraphEditor.serialize] for the format), or [code]null[/code] if the
+## file is missing or is not valid JSON.
+static func read_graph_file(path: String) -> Variant:
     if not FileAccess.file_exists(path):
         push_error("Tried to deserialize a graph from '%s' but it does not exist!" % path)
         return null
@@ -144,13 +142,27 @@ static func deserialize_graph_runtime(path: String, node_script: GDScript, link_
     var json_string: String = file.get_as_text()
     var parse_result := json.parse(json_string)
 
+    file.close()
+
     if not parse_result == OK:
-        push_error("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+        push_error("JSON Parse Error: %s in %s at line %s" % [json.get_error_message(), json_string, json.get_error_line()])
         return null
 
-    var data: Dictionary = json.data as Dictionary
+    return json.data as Dictionary
 
-    file.close()
+
+## Given a path to a .gegraph, returns a deserialized CGEGraph
+## allowing to have just node and connectivity info and scrap out
+## all the editor specific data.[br]
+## Model data only: UI data (positions...) is ignored, see [method load_from_file] to display it in a viewer.[br]
+##
+## [param path]: Path to the .gegraph file[br]
+## [param node_script]: GDScript class for nodes (must inherit from CGEGraphNode)[br]
+## [param link_script]: GDScript class for links (must inherit from CGEGraphLink)[br]
+static func deserialize_graph_runtime(path: String, node_script: GDScript, link_script: GDScript) -> CGEGraph:
+    var data = read_graph_file(path)
+    if data == null:
+        return null
 
     var new_graph: CGEGraph = CGEGraph.new()
     new_graph.node_class = node_script
@@ -212,6 +224,43 @@ func load_graph(new_graph: CGEGraph) -> void:
     for link_id in graph.get_all_link_ids():
         var link: CGEGraphLink = graph.get_link(link_id)
         _on_link_created(link.start_node_id, link.end_node_id, link_id)
+
+
+## Replaces the content of the displayed [member graph] with the one described by [param data] (the
+## format written by [method CGEGraphEditor.serialize]), restoring UI data too (node positions,
+## [method CGEGraphElementUI._update_ui_from_data]). Uses [member node_class] / [member link_class].[br]
+## The [member graph] instance itself is kept (cleared then refilled), so references to it stay valid.[br]
+## Must be called once the viewer is ready (e.g. from a parent's [code]_ready()[/code]).
+func deserialize(data: Dictionary) -> void:
+    # Make sure the graph signals are bound, so the UI is built while the graph is refilled
+    if not graph.node_created.is_connected(_on_node_created):
+        load_graph(graph)
+
+    graph.clear_all()
+    graph.node_class = node_class
+    graph.link_class = link_class
+    graph.deserialize(data)
+
+    # Apply UI-side data (position, ...) on top of the freshly built UIs
+    var nodes_data: Dictionary = data["nodes"]
+    for node_id_str in nodes_data.keys():
+        get_graph_node(int(node_id_str)).deserialize(nodes_data[node_id_str])
+
+    var links_data: Dictionary = data["links"]
+    for link_id_str in links_data.keys():
+        get_graph_link(int(link_id_str)).deserialize(links_data[link_id_str])
+
+
+## Loads a .gegraph file (as saved by [CGEGraphEditor]) into this viewer, UI data included.
+## Returns [code]false[/code] (and logs an error) if the file is missing or invalid.
+## See [method deserialize].
+func load_from_file(path: String) -> bool:
+    var data = read_graph_file(path)
+    if data == null:
+        return false
+
+    deserialize(data)
+    return true
 
 
 func _unbind_current_graph() -> void:

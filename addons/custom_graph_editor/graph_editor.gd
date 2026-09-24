@@ -288,38 +288,10 @@ func serialize() -> Dictionary[String, Variant]:
 
 
 ## Deserialize the graph from a Dictionary[String, Variant], recreating all nodes and links. See [method serialize] for the expected format.
-## [b]Note:[/b] [member node_class] and [member link_class] must be set before calling this method, as they are used to create the nodes and links.
+## Clears the selection, then delegates to [method CGEGraphViewer.deserialize]. Does not touch the command history.
 func deserialize(data: Dictionary) -> void:
-    graph.clear_all()
-
-    # node_class and link_class are already set via @export in the editor
-    # They must be set before calling deserialize
-    graph.node_class = node_class
-    graph.link_class = link_class
-
-    # Recreate all nodes
-    var nodes_data: Dictionary = data["nodes"]
-    for node_id_str in nodes_data.keys():
-        var node_id: int = int(node_id_str)
-        CGEAddNodeCommand.new(
-            self,
-            int(node_id)
-        ).execute()
-
-        get_graph_node(node_id).deserialize(nodes_data[node_id_str])
-
-    # Recreate all links
-    var links_data: Dictionary = data["links"]
-    for link_id_str in links_data.keys():
-        var link_id: int = int(link_id_str)
-        var link_data = link_class.new(link_id)
-        link_data.deserialize(links_data[link_id_str])
-        # Create the link (logic part)
-        graph.create_link(link_data.start_node_id, link_data.end_node_id, link_data.id)
-        # Update the link UI with deserialized data
-        get_graph_link(link_id).deserialize(links_data[link_id_str])
-
-    graph._sync_id_counter() # Should maybe call graph.deserialize first ?
+    clear_selection()
+    _viewer.deserialize(data)
 
 
 ## Save the graph to a file. Called when a file is chosen in the save file dialog.
@@ -337,32 +309,19 @@ func save_to_file(path: String) -> void:
 
 
 ## Load the graph from a file. Called when a file is chosen in the load file dialog.
-func load_from_file(path: String) -> void:
-    if not FileAccess.file_exists(path):
-        push_error("Tried to load graph for '%s' but it does not exist!" % path)
-        return
-
-    var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-
-    var json: JSON = JSON.new()
-    var json_string: String = file.get_as_text()
-    var parse_result := json.parse(json_string)
-
-
-    if not parse_result == OK:
-        push_error("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
-        return
-
-    var data: Dictionary = json.data as Dictionary
-    deserialize(data)
-
-    file.close()
+## Delegates to [method CGEGraphViewer.load_from_file], then resets the editor file state and history.
+## Returns [code]false[/code] if the file is missing or invalid.
+func load_from_file(path: String) -> bool:
+    clear_selection()
+    if not _viewer.load_from_file(path):
+        return false
 
     current_file_path = path
     file_is_modified = false
     _toolbar.set_filename_label(path)
     _command_history.clear_all()
     # no need to mark_saved() because clear_all does it
+    return true
 
 
 ######## PRIVATE METHODS ########
