@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0-beta] - 2026-09-24
+
 ### Added
 - `CGEGraphViewer.load_from_file(path)` / `CGEGraphViewer.deserialize(data)`: load a `.gegraph` into a
   standalone viewer with its UI data (node positions, principally).
@@ -131,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Serialization/deserialization
 - Location map example
 
-[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.8.0-beta...HEAD
+[Unreleased]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.9.0-beta...HEAD
+[0.9.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.8.0-beta...v0.9.0-beta
 [0.8.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.7.0-beta...v0.8.0-beta
 [0.7.0-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.1-beta...v0.7.0-beta
 [0.6.1-beta]: https://github.com/tehelka-gamedev/godot-custom-graph-editor/compare/v0.6.0-beta...v0.6.1-beta
